@@ -56,7 +56,7 @@ type WalletInitMsg struct {
 	// ChanBackups a set of static channel backups that should be received
 	// after the wallet has been initialized.
 	ChanBackups ChannelsToRecover
-        UniqueId string//vyomesh
+        UniqueId string
 }
 
 // WalletUnlockMsg is a message sent by the UnlockerService when a user wishes
@@ -84,7 +84,7 @@ type WalletUnlockMsg struct {
 	// ChanBackups a set of static channel backups that should be received
 	// after the wallet has been unlocked.
 	ChanBackups ChannelsToRecover
-        UniqueId string//vyomesh
+        UniqueId string
 }
 
 // UnlockerService implements the WalletUnlocker service used to provide lnd
@@ -133,7 +133,7 @@ func (u *UnlockerService) GenSeed(ctx context.Context,
 	// Before we start, we'll ensure that the wallet hasn't already created
 	// so we don't show a *new* seed to the user if one already exists.
 
-        //code modify by vyomesh
+        //code modify
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
 		u.netParams.Name,
@@ -269,7 +269,7 @@ func (u *UnlockerService) InitWallet(ctx context.Context,
 
 	// We'll then open up the directory that will be used to store the
 	// wallet's files so we can check if the wallet already exists.
-        //code modify by vyomesh
+        //code modify 
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
 		u.netParams.Name,
@@ -335,7 +335,7 @@ func (u *UnlockerService) UnlockWallet(ctx context.Context,
 	password := in.WalletPassword
 	recoveryWindow := uint32(in.RecoveryWindow)
 
-        //code modify by vyomesh
+        //code modify
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
 		u.netParams.Name,
@@ -395,7 +395,7 @@ func (u *UnlockerService) UnlockWallet(ctx context.Context,
 func (u *UnlockerService) ChangePassword(ctx context.Context,
 	in *lnrpc.ChangePasswordRequest) (*lnrpc.ChangePasswordResponse, error) {
 
-        //code modify by vyomesh
+        //code modify
            
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
@@ -444,7 +444,7 @@ func (u *UnlockerService) ChangePassword(ctx context.Context,
 	// re-generated at startup using the new password. We'll make sure to do
 	// this after unlocking the wallet to ensure macaroon files don't get
 	// deleted with incorrect password attempts.
-        //vyomesh macaroons edit macaroon files according to user id 
+        // macaroons edit macaroon files according to user id 
          u.macaroonFiles = []string{
 		filepath.Join(netDir, "macaroons.db"),
 		filepath.Join(

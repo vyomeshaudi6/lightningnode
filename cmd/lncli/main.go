@@ -252,7 +252,7 @@ func main() {
 			Usage: "if set, lock macaroon to specific IP address",
 		},
                 cli.StringFlag{
-			Name: "User_Id",//vyomesh code edit
+			Name: "User_Id",// code edit
                         Value: "DefaultValue",
 			Usage: "set unique user id for ever new user",
 		},

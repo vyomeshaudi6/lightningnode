@@ -38,7 +38,7 @@ var (
 )
 
 func createTestWallet(t *testing.T, dir string, netParams *chaincfg.Params) {
-	//code modify by vyomesh
+	//code modify
         loadedConfig, err := loadConfig()
 	if err != nil {
 		return err

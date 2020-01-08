@@ -129,7 +129,7 @@ type server struct {
         
 	start sync.Once
 	stop  sync.Once
-        //vyomesh added user id for server instances on multiple port and checking them on time of lightning commands  
+        // added user id for server instances on multiple port and checking them on time of lightning commands  
         User_Id string
 
 	// identityPriv is the private key used to authenticate any incoming
@@ -317,7 +317,7 @@ func newServer(listenAddrs []net.Addr, chanDB *channeldb.DB,
 
 	var err error
 
-	listeners := make([]net.Listener, 1)////----vyomesh------------len(listenAddrs))
+	listeners := make([]net.Listener, 1)////----------------len(listenAddrs))
 	for i, listenAddr := range listenAddrs {
 		// Note: though brontide.NewListener uses ResolveTCPAddr, it
 		// doesn't need to call the general lndResolveTCP function
@@ -328,7 +328,7 @@ func newServer(listenAddrs []net.Addr, chanDB *channeldb.DB,
 		if err != nil {
                          i=i-1
                          continue
-			//return nil, err //vyomesh
+			//return nil, err 
 		}
                 break
 	}
@@ -384,7 +384,7 @@ func newServer(listenAddrs []net.Addr, chanDB *channeldb.DB,
 	}
 
 	s := &server{
-                //vyomesh added userid 
+                // added userid 
                 User_Id:        UserId,
 		chanDB:         chanDB,
 		cc:             cc,

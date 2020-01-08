@@ -64,13 +64,13 @@ const (
 var (
 	cfg              *config
 	registeredChains = newChainRegistry()
-        ChanDB *channeldb.DB //vyomesh channel.db
+        ChanDB *channeldb.DB // channel.db
         // networkDir is the path to the directory of the currently active
 	// network. This path will hold the files related to each different
 	// network.
 	networkDir string
         graphDir string
-        UserId string //vyomesh added userid for multiple server instances and passed to new server func
+        UserId string // added userid for multiple server instances and passed to new server func
         // End of ASN.1 time.
 	endOfTime = time.Date(2049, 12, 31, 23, 59, 59, 0, time.UTC)
 
@@ -287,8 +287,8 @@ func Main(lisCfg ListenerCfg) error {
 				 continue
                                 //return nil, nil, nil, err
 			}
-			grpcListeners = append(grpcListeners,lis)//vyomesh
-                        break//vyomesh
+			grpcListeners = append(grpcListeners,lis)
+                        break
 		}
 
 		cleanup := func() {
@@ -327,7 +327,7 @@ func Main(lisCfg ListenerCfg) error {
 	// We wait until the user provides a password over RPC. In case lnd is
 	// started with the --noseedbackup flag, we use the default password
 	// for wallet encryption.
-        //vyomesh for loop edit
+        // for loop edit
         for i := 0 ; i < 3 ; i++ {
         walletInitParams.Birthday = time.Now()
 	if !cfg.NoSeedBackup {
@@ -352,9 +352,9 @@ func Main(lisCfg ListenerCfg) error {
 				walletInitParams.RecoveryWindow)
 		}
 	}
-         defer ChanDB.Close()//vyomesh channel.db
+         defer ChanDB.Close()// channel.db
 
-         //vyomesh macaroons edit
+         // macaroons edit
          // If a custom macaroon directory wasn't specified and the data
 	 // directory has changed from the default path, then we'll also update
          // the path for the macaroons to be generated.
@@ -682,7 +682,7 @@ func Main(lisCfg ListenerCfg) error {
 		}
 		defer tower.Stop()
 	}
-       } //for loop ends vyomesh
+       } //for loop ends 
 	// Wait for shutdown signal from either a graceful server stop or from
 	// the interrupt handler.
 	<-signal.ShutdownChannel()
@@ -1035,14 +1035,14 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 	// also encrypted with the wallet's password. These files will be
 	// deleted within it and recreated when successfully changing the
 	// wallet's password.
-        //vyomesh macaroons files here are of no use since we modified the change password according to user id so wallet unlocker passing macaroons files  to pwservice of no use
+        // macaroons files here are of no use since we modified the change password according to user id so wallet unlocker passing macaroons files  to pwservice of no use
         //here macaroon files passing to pwservice is just for change password command  so that we can delete old macaroons and gen new  
 	/*macaroonFiles := []string{
 		filepath.Join(graphDir, macaroons.DBFilename),
 		cfg.AdminMacPath, cfg.ReadMacPath, cfg.InvoiceMacPath,
 	}
 */
-       //vyomesh so passing an empty string we can delete it later or remove the field from struct 
+       // so passing an empty string we can delete it later or remove the field from struct 
         macaroonFiles := []string{}
 	pwService := walletunlocker.New(
 		chainConfig.ChainDir, activeNetParams.Params, !cfg.SyncFreelist,
@@ -1088,7 +1088,7 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 				restEndpoint,
 			)
                         continue
-			//return nil, err //vyomesh
+			//return nil, err //
 		}
 		defer lis.Close()
 
@@ -1136,7 +1136,7 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 				cipherSeed.InternalVersion,
 				keychain.KeyDerivationVersion)
 		}
-                //code modify by vyomesh-----start--------
+                //code modify by -----start--------
 		//netDir := btcwallet.NetworkDir(
 		//	chainConfig.ChainDir, activeNetParams.Params,
 		//)
@@ -1145,7 +1145,7 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 		normalizeNetwork(activeNetParams.Name),initMsg.UniqueId)
                 netDir := graphDir               
 
-                //code modify by vyomesh-----end--------
+                //code modify by -----end--------
 		loader := wallet.NewLoader(
 			activeNetParams.Params, netDir, !cfg.SyncFreelist,
 			recoveryWindow,
@@ -1166,7 +1166,7 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 			}
 			return nil, err
 		}
-                /////----channel.db vyomesh-----
+                /////----channel.db -----
                 ltndLog.Infof("lnd.go before opening channeldb.open")
 	        ChanDB, err = channeldb.Open(
 		graphDir,
@@ -1180,7 +1180,7 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 		return nil,err
 	        }
                 ltndLog.Infof("lnd.go after opening channeldb.open channeled opened success")
-                //vyomesh added userid for multiple server instance 
+                // added userid for multiple server instance 
                 UserId = initMsg.UniqueId
  
 		return &WalletUnlockParams{
@@ -1194,7 +1194,7 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 	// The wallet has already been created in the past, and is simply being
 	// unlocked. So we'll just return these passphrases.
 	case unlockMsg := <-pwService.UnlockMsgs:
-                /////----channel.db vyomesh-----
+                /////----channel.db -----
                 graphDir = filepath.Join("test_data_PrvW",
 		defaultGraphSubDirname,
 		normalizeNetwork(activeNetParams.Name),unlockMsg.UniqueId)
@@ -1212,7 +1212,7 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 		return nil,err
 	        }
                 ltndLog.Infof("lnd.go after opening channeldb.open channeled opened success")
-                //vyomesh added userid for multiple server instance
+                // added userid for multiple server instance
                 UserId = unlockMsg.UniqueId
 		return &WalletUnlockParams{
 			Password:       unlockMsg.Passphrase,

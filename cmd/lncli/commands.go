@@ -69,7 +69,7 @@ func printRespJSON(resp proto.Message) {
 // to command actions.
 func actionDecorator(f func(*cli.Context) error) func(*cli.Context) error {
                 return func(c *cli.Context) error {
-                        //vyomesh code edit
+                        //code edit
                         fmt.Println(" userd id is set to global variable after this line ")
                         UniqueId = c.GlobalString("User_Id")
                         fmt.Printf(" unique id is set now %s \n",UniqueId)

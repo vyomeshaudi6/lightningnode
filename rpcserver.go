@@ -742,7 +742,7 @@ func (r *rpcServer) Start() error {
 				restEndpoint,
 			)
                         continue
-			//return err -----vyomesh
+			//return err -----
 		}
 
 		r.listenerCleanUp = append(r.listenerCleanUp, func() {
@@ -845,7 +845,7 @@ func (r *rpcServer) sendCoinsOnChain(paymentMap map[string]int64,
 func (r *rpcServer) ListUnspent(ctx context.Context,
 	in *lnrpc.ListUnspentRequest) (*lnrpc.ListUnspentResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -955,7 +955,7 @@ func (r *rpcServer) ListUnspent(ctx context.Context,
 func (r *rpcServer) EstimateFee(ctx context.Context,
 	in *lnrpc.EstimateFeeRequest) (*lnrpc.EstimateFeeResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1014,7 +1014,7 @@ func (r *rpcServer) EstimateFee(ctx context.Context,
 func (r *rpcServer) SendCoins(ctx context.Context,
 	in *lnrpc.SendCoinsRequest) (*lnrpc.SendCoinsResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1142,7 +1142,7 @@ func (r *rpcServer) SendCoins(ctx context.Context,
 func (r *rpcServer) SendMany(ctx context.Context,
 	in *lnrpc.SendManyRequest) (*lnrpc.SendManyResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1195,7 +1195,7 @@ func (r *rpcServer) SendMany(ctx context.Context,
 func (r *rpcServer) NewAddress(ctx context.Context,
 	in *lnrpc.NewAddressRequest) (*lnrpc.NewAddressResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1260,7 +1260,7 @@ var (
 func (r *rpcServer) SignMessage(ctx context.Context,
 	in *lnrpc.SignMessageRequest) (*lnrpc.SignMessageResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1287,7 +1287,7 @@ func (r *rpcServer) SignMessage(ctx context.Context,
 func (r *rpcServer) VerifyMessage(ctx context.Context,
 	in *lnrpc.VerifyMessageRequest) (*lnrpc.VerifyMessageResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1337,7 +1337,7 @@ func (r *rpcServer) VerifyMessage(ctx context.Context,
 func (r *rpcServer) ConnectPeer(ctx context.Context,
 	in *lnrpc.ConnectPeerRequest) (*lnrpc.ConnectPeerResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1396,7 +1396,7 @@ func (r *rpcServer) ConnectPeer(ctx context.Context,
 func (r *rpcServer) DisconnectPeer(ctx context.Context,
 	in *lnrpc.DisconnectPeerRequest) (*lnrpc.DisconnectPeerResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1450,7 +1450,7 @@ func (r *rpcServer) DisconnectPeer(ctx context.Context,
 // transaction should satisfy.
 func extractOpenChannelMinConfs(in *lnrpc.OpenChannelRequest) (int32, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         	
         switch {
@@ -1490,7 +1490,7 @@ func extractOpenChannelMinConfs(in *lnrpc.OpenChannelRequest) (int32, error) {
 func (r *rpcServer) OpenChannel(in *lnrpc.OpenChannelRequest,
 	updateStream lnrpc.Lightning_OpenChannelServer) error {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1652,7 +1652,7 @@ out:
 func (r *rpcServer) OpenChannelSync(ctx context.Context,
 	in *lnrpc.OpenChannelRequest) (*lnrpc.ChannelPoint, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -1809,7 +1809,7 @@ func GetChanPointFundingTxid(chanPoint *lnrpc.ChannelPoint) (*chainhash.Hash, er
 func (r *rpcServer) CloseChannel(in *lnrpc.CloseChannelRequest,
 	updateStream lnrpc.Lightning_CloseChannelServer) error {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return fmt.Errorf("user id or port incorrect please check the user id again")
@@ -2031,7 +2031,7 @@ func createRPCCloseUpdate(update interface{}) (
 func (r *rpcServer) AbandonChannel(ctx context.Context,
 	in *lnrpc.AbandonChannelRequest) (*lnrpc.AbandonChannelResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -2119,7 +2119,7 @@ func (r *rpcServer) fetchActiveChannel(chanPoint wire.OutPoint) (
 func (r *rpcServer) GetInfo(ctx context.Context,
 	in *lnrpc.GetInfoRequest) (*lnrpc.GetInfoResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -2213,7 +2213,7 @@ func (r *rpcServer) GetInfo(ctx context.Context,
 func (r *rpcServer) ListPeers(ctx context.Context,
 	in *lnrpc.ListPeersRequest) (*lnrpc.ListPeersResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -2299,7 +2299,7 @@ func (r *rpcServer) ListPeers(ctx context.Context,
 func (r *rpcServer) WalletBalance(ctx context.Context,
 	in *lnrpc.WalletBalanceRequest) (*lnrpc.WalletBalanceResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -2337,7 +2337,7 @@ func (r *rpcServer) WalletBalance(ctx context.Context,
 func (r *rpcServer) ChannelBalance(ctx context.Context,
 	in *lnrpc.ChannelBalanceRequest) (*lnrpc.ChannelBalanceResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -2379,7 +2379,7 @@ func (r *rpcServer) ChannelBalance(ctx context.Context,
 func (r *rpcServer) PendingChannels(ctx context.Context,
 	in *lnrpc.PendingChannelsRequest) (*lnrpc.PendingChannelsResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -2672,7 +2672,7 @@ func (r *rpcServer) ClosedChannels(ctx context.Context,
 	in *lnrpc.ClosedChannelsRequest) (*lnrpc.ClosedChannelsResponse,
 	error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -2741,7 +2741,7 @@ func (r *rpcServer) ClosedChannels(ctx context.Context,
 func (r *rpcServer) ListChannels(ctx context.Context,
 	in *lnrpc.ListChannelsRequest) (*lnrpc.ListChannelsResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -4057,7 +4057,7 @@ func marshalDbEdge(edgeInfo *channeldb.ChannelEdgeInfo,
 func (r *rpcServer) GetChanInfo(ctx context.Context,
 	in *lnrpc.ChanInfoRequest) (*lnrpc.ChannelEdge, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -4083,7 +4083,7 @@ func (r *rpcServer) GetChanInfo(ctx context.Context,
 func (r *rpcServer) GetNodeInfo(ctx context.Context,
 	in *lnrpc.NodeInfoRequest) (*lnrpc.NodeInfo, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -4180,7 +4180,7 @@ func (r *rpcServer) GetNodeInfo(ctx context.Context,
 func (r *rpcServer) QueryRoutes(ctx context.Context,
 	in *lnrpc.QueryRoutesRequest) (*lnrpc.QueryRoutesResponse, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -4971,7 +4971,7 @@ func (r *rpcServer) ForwardingHistory(ctx context.Context,
 func (r *rpcServer) ExportChannelBackup(ctx context.Context,
 	in *lnrpc.ExportChannelBackupRequest) (*lnrpc.ChannelBackup, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
@@ -5159,7 +5159,7 @@ func (r *rpcServer) createBackupSnapshot(backups []chanbackup.Single) (
 func (r *rpcServer) ExportAllChannelBackups(ctx context.Context,
 	in *lnrpc.ChanBackupExportRequest) (*lnrpc.ChanBackupSnapshot, error) {
 
-        //vyomesh code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
            return nil, fmt.Errorf("user id or port incorrect please check the user id again")
