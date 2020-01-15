@@ -2122,7 +2122,7 @@ func (r *rpcServer) GetInfo(ctx context.Context,
         // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
         if(in.User_Id != r.server.User_Id){
-           return nil, fmt.Errorf("user id or port incorrect please check the user id again")
+           return nil, fmt.Errorf("user id or port incorrect please check the user id again request id=%s , server instance id = %s",in.User_Id,r.server.User_Id)
         }
 	serverPeers := r.server.Peers()
         fmt.Sprintf("r address %v",r)

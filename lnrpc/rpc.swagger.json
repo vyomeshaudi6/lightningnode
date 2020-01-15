@@ -667,7 +667,7 @@
         ]
       }
     },
-    "/v1/getinfo": {
+    "/v1/getinfo/{User_Id}": {
       "get": {
         "summary": "* lncli: `getinfo`\nGetInfo returns general information concerning the lightning node including\nit's identity pubkey, alias, the chains it is connected to, and information\nconcerning the number of open+pending channels.",
         "operationId": "GetInfo",
@@ -683,8 +683,8 @@
           {
             "name": "User_Id",
             "description": "/ The UserId of the current lnd node.",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string"
           }
         ],

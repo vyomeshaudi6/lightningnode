@@ -74,7 +74,12 @@ func actionDecorator(f func(*cli.Context) error) func(*cli.Context) error {
                         UniqueId = c.GlobalString("User_Id")
                         fmt.Printf(" unique id is set now %s \n",UniqueId)
                         //-----end/////
-
+                        //custom domain check to get userid from  domain name in cli 
+                        fmt.Printf("\nrestlisten domain %s\n",c.GlobalString("rpcserver"))
+                        if( c.GlobalString("rpcserver")[0:(strings.LastIndex(c.GlobalString("rpcserver"),":"))] != "localhost") {
+                        UniqueId= c.GlobalString("rpcserver")[0:(strings.LastIndex(c.GlobalString("rpcserver"),"."))]
+                        fmt.Printf("unique id is set now %s \n",UniqueId)
+                        }
 	                if err := f(c); err != nil {
                         s, ok := status.FromError(err)
 

@@ -371,7 +371,7 @@ service Lightning {
     */
     rpc GetInfo (GetInfoRequest) returns (GetInfoResponse) {
         option (google.api.http) = {
-            get: "/v1/getinfo"
+            get: "/v1/getinfo/{User_Id}"
         };
     }
 
