@@ -667,32 +667,6 @@
         ]
       }
     },
-    "/v1/getinfo/{User_Id}": {
-      "get": {
-        "summary": "* lncli: `getinfo`\nGetInfo returns general information concerning the lightning node including\nit's identity pubkey, alias, the chains it is connected to, and information\nconcerning the number of open+pending channels.",
-        "operationId": "GetInfo",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/lnrpcGetInfoResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "User_Id",
-            "description": "/ The UserId of the current lnd node.",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Lightning"
-        ]
-      }
-    },
     "/v1/graph": {
       "get": {
         "summary": "* lncli: `describegraph`\nDescribeGraph returns a description of the latest graph state from the\npoint of view of the node. The graph information is partitioned into two\ncomponents: all the nodes/vertexes, and all the edges that connect the\nvertexes themselves. As this is a directed graph, the edges also contain\nthe node directional specific routing policy which includes: the time lock\ndelta, fee information, etc.",
@@ -1588,6 +1562,32 @@
             "schema": {
               "$ref": "#/definitions/lnrpcVerifyMessageRequest"
             }
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/{User_Id}/v1/getinfo": {
+      "get": {
+        "summary": "* lncli: `getinfo`\nGetInfo returns general information concerning the lightning node including\nit's identity pubkey, alias, the chains it is connected to, and information\nconcerning the number of open+pending channels.",
+        "operationId": "GetInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/lnrpcGetInfoResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "User_Id",
+            "description": "/ The UserId of the current lnd node.",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [

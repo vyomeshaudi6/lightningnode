@@ -214,9 +214,9 @@ func Main(lisCfg ListenerCfg) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	tlsCfg, restCreds, restProxyDest, err := getTLSConfig(
+	tlsCfg, restCreds, err := getTLSConfig(
 		cfg.TLSCertPath, cfg.TLSKeyPath, cfg.TLSExtraIPs,
-		cfg.TLSExtraDomains, cfg.RPCListeners,
+		cfg.TLSExtraDomains,
 	)
 	if err != nil {
 		err := fmt.Errorf("Unable to load TLS credentials: %v", err)
@@ -330,6 +330,20 @@ func Main(lisCfg ListenerCfg) error {
         // for loop edit
         for i := 0 ; i < 3 ; i++ {
         walletInitParams.Birthday = time.Now()
+        // code modified to get rest proxy set accoring to rpc port i.e linking rpc port and rest proxy port together 
+        restProxyDest := cfg.RPCListeners[i].String()
+	switch {
+	case strings.Contains(restProxyDest, "0.0.0.0"):
+		restProxyDest = strings.Replace(
+			restProxyDest, "0.0.0.0", "127.0.0.1", 1,
+		)
+
+	case strings.Contains(restProxyDest, "[::]"):
+		restProxyDest = strings.Replace(
+			restProxyDest, "[::]", "[::1]", 1,
+		)
+	}
+      
 	if !cfg.NoSeedBackup {
 		params, err := waitForWalletPassword(
 			cfg.RESTListeners, restDialOpts, restProxyDest, tlsCfg,
@@ -693,8 +707,8 @@ func Main(lisCfg ListenerCfg) error {
 // getTLSConfig returns a TLS configuration for the gRPC server and credentials
 // and a proxy destination for the REST reverse proxy.
 func getTLSConfig(tlsCertPath string, tlsKeyPath string, tlsExtraIPs,
-	tlsExtraDomains []string, rpcListeners []net.Addr) (*tls.Config,
-	*credentials.TransportCredentials, string, error) {
+	tlsExtraDomains []string) (*tls.Config,
+	*credentials.TransportCredentials,error) {
 
 	// Ensure we create TLS key and certificate if they don't exist
 	if !fileExists(tlsCertPath) && !fileExists(tlsKeyPath) {
@@ -702,18 +716,18 @@ func getTLSConfig(tlsCertPath string, tlsKeyPath string, tlsExtraIPs,
 			tlsCertPath, tlsKeyPath, tlsExtraIPs, tlsExtraDomains,
 		)
 		if err != nil {
-			return nil, nil, "", err
+			return nil, nil, err
 		}
 	}
 
 	certData, err := tls.LoadX509KeyPair(tlsCertPath, tlsKeyPath)
 	if err != nil {
-		return nil, nil, "", err
+		return nil, nil,  err
 	}
 
 	cert, err := x509.ParseCertificate(certData.Certificate[0])
 	if err != nil {
-		return nil, nil, "", err
+		return nil, nil, err
 	}
 
 	// If the certificate expired, delete it and the TLS key and generate a new pair
@@ -722,19 +736,19 @@ func getTLSConfig(tlsCertPath string, tlsKeyPath string, tlsExtraIPs,
 
 		err := os.Remove(tlsCertPath)
 		if err != nil {
-			return nil, nil, "", err
+			return nil, nil, err
 		}
 
 		err = os.Remove(tlsKeyPath)
 		if err != nil {
-			return nil, nil, "", err
+			return nil, nil,  err
 		}
 
 		err = genCertPair(
 			tlsCertPath, tlsKeyPath, tlsExtraIPs, tlsExtraDomains,
 		)
 		if err != nil {
-			return nil, nil, "", err
+			return nil, nil,  err
 		}
 
 	}
@@ -747,23 +761,12 @@ func getTLSConfig(tlsCertPath string, tlsKeyPath string, tlsExtraIPs,
 
 	restCreds, err := credentials.NewClientTLSFromFile(tlsCertPath, "")
 	if err != nil {
-		return nil, nil, "", err
+		return nil, nil,  err
 	}
 
-	restProxyDest := rpcListeners[0].String()
-	switch {
-	case strings.Contains(restProxyDest, "0.0.0.0"):
-		restProxyDest = strings.Replace(
-			restProxyDest, "0.0.0.0", "127.0.0.1", 1,
-		)
+	
 
-	case strings.Contains(restProxyDest, "[::]"):
-		restProxyDest = strings.Replace(
-			restProxyDest, "[::]", "[::1]", 1,
-		)
-	}
-
-	return tlsCfg, &restCreds, restProxyDest, nil
+	return tlsCfg, &restCreds, nil
 }
 
 // fileExists reports whether the named file or directory exists.
