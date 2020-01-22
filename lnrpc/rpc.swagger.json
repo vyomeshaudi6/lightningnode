@@ -137,7 +137,7 @@
           },
           {
             "name": "User_Id",
-            "description": "/vyomesh  The UserId of the current lnd node.",
+            "description": "/ The UserId of the current lnd node.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -408,7 +408,7 @@
           },
           {
             "name": "User_Id",
-            "description": "/vyomesh  The UserId of the current lnd node.",
+            "description": "/ The UserId of the current lnd node.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -656,7 +656,7 @@
             "format": "byte"
           },
           {
-            "name": "UniqueId",
+            "name": "User_Id",
             "in": "query",
             "required": false,
             "type": "string"
@@ -664,6 +664,32 @@
         ],
         "tags": [
           "WalletUnlocker"
+        ]
+      }
+    },
+    "/v1/getinfo": {
+      "get": {
+        "summary": "* lncli: `getinfo`\nGetInfo returns general information concerning the lightning node including\nit's identity pubkey, alias, the chains it is connected to, and information\nconcerning the number of open+pending channels.",
+        "operationId": "GetInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/lnrpcGetInfoResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "User_Id",
+            "description": "/ The UserId of the current lnd node.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Lightning"
         ]
       }
     },
@@ -973,6 +999,13 @@
             "required": false,
             "type": "string",
             "format": "byte"
+          },
+          {
+            "name": "User_Id",
+            "description": "/vyomesh  The UserId of the current lnd node.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -1091,6 +1124,13 @@
             "required": false,
             "type": "string",
             "format": "uint64"
+          },
+          {
+            "name": "User_Id",
+            "description": "/vyomesh  The UserId of the current lnd node.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -1154,7 +1194,7 @@
           },
           {
             "name": "User_Id",
-            "description": "/vyomesh  The UserId of the current lnd node.",
+            "description": "The UserId of the current lnd node.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1264,7 +1304,7 @@
         "parameters": [
           {
             "name": "User_Id",
-            "description": "/vyomesh  The UserId of the current lnd node.",
+            "description": "/The UserId of the current lnd node.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1322,7 +1362,7 @@
           },
           {
             "name": "User_Id",
-            "description": "/vyomesh  The UserId of the current lnd node.",
+            "description": "/ The UserId of the current lnd node.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1462,7 +1502,7 @@
           },
           {
             "name": "User_Id",
-            "description": "/vyomesh  The UserId of the current lnd node.",
+            "description": "/The UserId of the current lnd node.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1531,7 +1571,7 @@
           },
           {
             "name": "User_Id",
-            "description": "/vyomesh  The UserId of the current lnd node.",
+            "description": "/ The UserId of the current lnd node.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1562,32 +1602,6 @@
             "schema": {
               "$ref": "#/definitions/lnrpcVerifyMessageRequest"
             }
-          }
-        ],
-        "tags": [
-          "Lightning"
-        ]
-      }
-    },
-    "/{User_Id}/v1/getinfo": {
-      "get": {
-        "summary": "* lncli: `getinfo`\nGetInfo returns general information concerning the lightning node including\nit's identity pubkey, alias, the chains it is connected to, and information\nconcerning the number of open+pending channels.",
-        "operationId": "GetInfo",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/lnrpcGetInfoResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "User_Id",
-            "description": "/ The UserId of the current lnd node.",
-            "in": "path",
-            "required": true,
-            "type": "string"
           }
         ],
         "tags": [
@@ -1858,6 +1872,10 @@
         "multi_chan_backup": {
           "$ref": "#/definitions/lnrpcMultiChanBackup",
           "description": "*\nA multi-channel backup that covers all open channels currently known to\nlnd."
+        },
+        "User_Id": {
+          "type": "string",
+          "description": "/vyomesh  The UserId of the current lnd node."
         }
       }
     },
@@ -1874,7 +1892,7 @@
           "format": "byte",
           "description": "*\nnew_password should be the new passphrase that will be needed to unlock the\ndaemon. When using REST, this field must be encoded as base64."
         },
-        "UniqueId": {
+        "User_Id": {
           "type": "string"
         }
       }
@@ -2076,7 +2094,7 @@
         },
         "User_Id": {
           "type": "string",
-          "description": "/vyomesh  The UserId of the current lnd node."
+          "description": "/ The UserId of the current lnd node."
         }
       }
     },
@@ -2392,7 +2410,7 @@
         },
         "User_Id": {
           "type": "string",
-          "description": "/vyomesh  The UserId of the current lnd node."
+          "description": "/ The UserId of the current lnd node."
         }
       }
     },
@@ -2600,9 +2618,6 @@
           "type": "string",
           "format": "byte",
           "description": "*\nenciphered_seed are the raw aezeed cipher seed bytes. This is the raw\ncipher text before run through our mnemonic encoding scheme."
-        },
-        "UniqueId": {
-          "type": "string"
         }
       }
     },
@@ -2843,7 +2858,7 @@
           "$ref": "#/definitions/lnrpcChanBackupSnapshot",
           "description": "*\nchannel_backups is an optional argument that allows clients to recover the\nsettled funds within a set of channels. This should be populated if the\nuser was unable to close out all channels and sweep funds before partial or\ntotal data loss occurred. If specified, then after on-chain recovery of\nfunds, lnd begin to carry out the data loss recovery protocol in order to\nrecover the funds in each channel from a remote force closed transaction."
         },
-        "UniqueId": {
+        "User_Id": {
           "type": "string"
         }
       }
@@ -2963,6 +2978,10 @@
             "$ref": "#/definitions/lnrpcInvoiceHTLC"
           },
           "description": "/ List of HTLCs paying to this invoice [EXPERIMENTAL]."
+        },
+        "User_Id": {
+          "type": "string",
+          "description": "/vyomesh  The UserId of the current lnd node."
         }
       }
     },
@@ -3440,6 +3459,10 @@
           "items": {
             "$ref": "#/definitions/lnrpcRouteHint"
           }
+        },
+        "User_Id": {
+          "type": "string",
+          "description": "/vyomesh  The UserId of the current lnd node."
         }
       }
     },
@@ -3825,7 +3848,7 @@
         },
         "User_Id": {
           "type": "string",
-          "description": "/vyomesh  The UserId of the current lnd node."
+          "description": "/ The UserId of the current lnd node."
         }
       }
     },
@@ -3911,7 +3934,7 @@
         },
         "User_Id": {
           "type": "string",
-          "description": "/vyomesh  The UserId of the current lnd node."
+          "description": "/  The UserId of the current lnd node."
         }
       }
     },
@@ -3952,7 +3975,7 @@
         },
         "User_Id": {
           "type": "string",
-          "description": "/vyomesh  The UserId of the current lnd node."
+          "description": "/The UserId of the current lnd node."
         }
       }
     },
@@ -3966,7 +3989,7 @@
         },
         "User_Id": {
           "type": "string",
-          "description": "/vyomesh  The UserId of the current lnd node."
+          "description": "/ The UserId of the current lnd node."
         }
       }
     },
@@ -4060,7 +4083,7 @@
           "$ref": "#/definitions/lnrpcChanBackupSnapshot",
           "description": "*\nchannel_backups is an optional argument that allows clients to recover the\nsettled funds within a set of channels. This should be populated if the\nuser was unable to close out all channels and sweep funds before partial or\ntotal data loss occurred. If specified, then after on-chain recovery of\nfunds, lnd begin to carry out the data loss recovery protocol in order to\nrecover the funds in each channel from a remote force closed transaction."
         },
-        "UniqueId": {
+        "User_Id": {
           "type": "string"
         }
       }
@@ -4116,7 +4139,7 @@
         },
         "User_Id": {
           "type": "string",
-          "description": "/vyomesh  The UserId of the current lnd node."
+          "description": "/ The UserId of the current lnd node."
         }
       }
     },

@@ -105,7 +105,7 @@ message GenSeedRequest {
     When using REST, this field must be encoded as base64.
     */
     bytes seed_entropy = 2;
-    string UniqueId = 3;
+    string User_Id = 3;
 }
 message GenSeedResponse {
     /**
@@ -122,7 +122,7 @@ message GenSeedResponse {
     cipher text before run through our mnemonic encoding scheme.
     */
     bytes enciphered_seed = 2;
-    string UniqueId = 3;
+    
 }
 
 message InitWalletRequest {
@@ -166,7 +166,7 @@ message InitWalletRequest {
     recover the funds in each channel from a remote force closed transaction.
     */
     ChanBackupSnapshot channel_backups = 5;
-    string UniqueId = 6;
+    string User_Id = 6;
 }
 message InitWalletResponse {
 }
@@ -197,7 +197,7 @@ message UnlockWalletRequest {
     recover the funds in each channel from a remote force closed transaction.
     */
     ChanBackupSnapshot channel_backups = 3;
-    string UniqueId = 4;
+    string User_Id = 4;
 }
 message UnlockWalletResponse {}
 
@@ -213,7 +213,7 @@ message ChangePasswordRequest {
     daemon. When using REST, this field must be encoded as base64.
     */
     bytes new_password = 2;
-    string UniqueId = 3;
+    string User_Id = 3;
 }
 message ChangePasswordResponse {}
 
@@ -371,7 +371,7 @@ service Lightning {
     */
     rpc GetInfo (GetInfoRequest) returns (GetInfoResponse) {
         option (google.api.http) = {
-            get: "/{User_Id}/v1/getinfo"
+            get: "/v1/getinfo"
         };
     }
 
@@ -958,7 +958,7 @@ message SendRequest {
     values must be encoded as base64.
     */
     map<uint64, bytes> dest_tlv = 11;
-    ///vyomesh  The UserId of the current lnd node.
+    ///  The UserId of the current lnd node.
     string User_Id = 13;
 }
 
@@ -986,7 +986,7 @@ message SendToRouteRequest {
 
     /// Route that should be used to attempt to complete the payment.
     Route route = 4;
-    ///vyomesh  The UserId of the current lnd node.
+    ///The UserId of the current lnd node.
     string User_Id = 5;
 }
 
@@ -1032,7 +1032,7 @@ message ChannelAcceptRequest {
 
     /// A bit-field which the initiator uses to specify proposed channel behavior.
     uint32 channel_flags = 13;
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 14;
 }
 
@@ -1088,7 +1088,7 @@ message EstimateFeeRequest {
 
     /// The target number of blocks that this transaction should be confirmed by.
     int32 target_conf = 2;
-    ///vyomesh  The UserId of the current lnd node.
+    ///The UserId of the current lnd node.
     string User_Id = 3;
 }
 
@@ -1109,7 +1109,7 @@ message SendManyRequest {
 
     /// A manual fee rate set in sat/byte that should be used when crafting the transaction.
     int64 sat_per_byte = 5;
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 6;
 }
 message SendManyResponse {
@@ -1136,7 +1136,7 @@ message SendCoinsRequest {
     address.
     */
     bool send_all = 6; 
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 7;
 }
 message SendCoinsResponse {
@@ -1150,7 +1150,7 @@ message ListUnspentRequest {
 
     /// The maximum number of confirmations to be included.
     int32 max_confs = 2;
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 3;
 }
 message ListUnspentResponse {
@@ -1174,7 +1174,7 @@ enum AddressType {
 message NewAddressRequest {
     /// The address type
     AddressType type = 1;
-    ///vyomesh  The UserId of the current lnd node.
+    //The UserId of the current lnd node.
     string User_Id = 2;
 }
 message NewAddressResponse {
@@ -1188,7 +1188,7 @@ message SignMessageRequest {
     base64.
     */
     bytes msg = 1 [ json_name = "msg" ];
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 2;
 }
 message SignMessageResponse {
@@ -1205,7 +1205,7 @@ message VerifyMessageRequest {
 
     /// The signature to be verified over the given message
     string signature = 2 [ json_name = "signature" ];
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 3;
 }
 message VerifyMessageResponse {
@@ -1223,7 +1223,7 @@ message ConnectPeerRequest {
     /** If set, the daemon will attempt to persistently connect to the target
      * peer. Otherwise, the call will be synchronous. */
     bool perm = 2;
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 3;
 }
 message ConnectPeerResponse {
@@ -1232,7 +1232,7 @@ message ConnectPeerResponse {
 message DisconnectPeerRequest {
     /// The pubkey of the node to disconnect from
     string pub_key = 1 [json_name = "pub_key"];
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 2;
 }
 message DisconnectPeerResponse {
@@ -1367,7 +1367,7 @@ message ListChannelsRequest {
     bool inactive_only = 2;
     bool public_only = 3;
     bool private_only = 4;
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 5;
 }
 message ListChannelsResponse {
@@ -1423,7 +1423,7 @@ message ClosedChannelsRequest {
     bool breach = 4;
     bool funding_canceled = 5;
     bool abandoned = 6;
-    ///vyomesh  The UserId of the current lnd node.
+    /// The UserId of the current lnd node.
     string User_Id = 7;
 }
 
@@ -1478,7 +1478,7 @@ message Peer {
 }
 
 message ListPeersRequest {
-    ///vyomesh  The UserId of the current lnd node.
+    ///The UserId of the current lnd node.
     string User_Id = 1;
 }
 message ListPeersResponse {
@@ -2397,6 +2397,8 @@ message Invoice {
 
     /// List of HTLCs paying to this invoice [EXPERIMENTAL].
     repeated InvoiceHTLC htlcs = 22 [json_name = "htlcs"];
+    ///vyomesh  The UserId of the current lnd node.
+    string User_Id = 23;
 }
 
 enum InvoiceHTLCState {
@@ -2464,6 +2466,8 @@ message PaymentHash {
     must be encoded as base64.
     */
     bytes r_hash = 2 [json_name = "r_hash"];
+    ///vyomesh  The UserId of the current lnd node.
+    string User_Id = 3;
 }
 
 message ListInvoiceRequest {
@@ -2523,6 +2527,8 @@ message InvoiceSubscription {
     they weren't connected to the streaming RPC.
     */
     uint64 settle_index = 2 [json_name = "settle_index"];
+    ///vyomesh  The UserId of the current lnd node.
+    string User_Id = 3;
 }
 
 
@@ -2630,6 +2636,8 @@ message PayReq {
     string fallback_addr = 8 [json_name = "fallback_addr"];
     int64 cltv_expiry = 9 [json_name = "cltv_expiry"];
     repeated RouteHint route_hints = 10 [json_name = "route_hints"];
+    ///vyomesh  The UserId of the current lnd node.
+    string User_Id = 11;
 }
 
 message FeeReportRequest {
@@ -2798,6 +2806,8 @@ message ChanBackupSnapshot  {
     lnd.
     */
     MultiChanBackup multi_chan_backup  = 2 [ json_name = "multi_chan_backup" ];
+    ///vyomesh  The UserId of the current lnd node.
+    string User_Id = 3;
 }
 
 message ChannelBackups {

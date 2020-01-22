@@ -1565,7 +1565,7 @@ mnemonicCheck:
 
 		genSeedReq := &lnrpc.GenSeedRequest{
 			AezeedPassphrase: aezeedPass,
-                        UniqueId:         UniqueId,
+                                 User_Id : UniqueId,
 		}
 		seedResp, err := client.GenSeed(ctxb, genSeedReq)
 		if err != nil {
@@ -1633,7 +1633,7 @@ mnemonicCheck:
 		AezeedPassphrase:   aezeedPass,
 		RecoveryWindow:     recoveryWindow,
 		ChannelBackups:     chanBackups,
-                UniqueId:           UniqueId,
+                           User_Id : UniqueId,
 	}
 	if _, err := client.InitWallet(ctxb, req); err != nil {
 		return err
@@ -1748,7 +1748,7 @@ func unlock(ctx *cli.Context) error {
 	req := &lnrpc.UnlockWalletRequest{
 		WalletPassword: pw,
 		RecoveryWindow: recoveryWindow,
-                UniqueId:       UniqueId,
+                       User_Id : UniqueId,
 	}
 	_, err = client.UnlockWallet(ctxb, req)
 	if err != nil {
@@ -1812,7 +1812,7 @@ func changePassword(ctx *cli.Context) error {
 	req := &lnrpc.ChangePasswordRequest{
 		CurrentPassword: currentPw,
 		NewPassword:     newPw,
-                UniqueId:        UniqueId,
+                        User_Id : UniqueId,
 	}
 
 	_, err = client.ChangePassword(ctxb, req)

@@ -137,7 +137,7 @@ func (u *UnlockerService) GenSeed(ctx context.Context,
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
 		u.netParams.Name,
-                in.UniqueId)
+                in.User_Id)
         //----code end ------
 
 	//netDir := btcwallet.NetworkDir(u.chainDir, u.netParams)
@@ -273,7 +273,7 @@ func (u *UnlockerService) InitWallet(ctx context.Context,
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
 		u.netParams.Name,
-                in.UniqueId)
+                in.User_Id)
         //----code end ------
 	//netDir := btcwallet.NetworkDir(u.chainDir, u.netParams)
 	loader := wallet.NewLoader(
@@ -311,7 +311,7 @@ func (u *UnlockerService) InitWallet(ctx context.Context,
 		Passphrase:     password,
 		WalletSeed:     cipherSeed,
 		RecoveryWindow: uint32(recoveryWindow),
-                UniqueId:       in.UniqueId,
+                UniqueId:       in.User_Id,
 	}
 
 	// Before we return the unlock payload, we'll check if we can extract
@@ -339,7 +339,7 @@ func (u *UnlockerService) UnlockWallet(ctx context.Context,
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
 		u.netParams.Name,
-                in.UniqueId)
+                in.User_Id)
         //----code end ------
 	//netDir := btcwallet.NetworkDir(u.chainDir, u.netParams)
 	loader := wallet.NewLoader(
@@ -371,7 +371,7 @@ func (u *UnlockerService) UnlockWallet(ctx context.Context,
 		Passphrase:     password,
 		RecoveryWindow: recoveryWindow,
 		Wallet:         unlockedWallet,
-                UniqueId:       in.UniqueId,
+                UniqueId:       in.User_Id,
 	}
 
 	// Before we return the unlock payload, we'll check if we can extract
@@ -400,7 +400,7 @@ func (u *UnlockerService) ChangePassword(ctx context.Context,
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
 		u.netParams.Name,
-                in.UniqueId)
+                in.User_Id)
         //----code end ------
 	//netDir := btcwallet.NetworkDir(u.chainDir, u.netParams)
 	loader := wallet.NewLoader(u.netParams, netDir, u.noFreelistSync, 0)
