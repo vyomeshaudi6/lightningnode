@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
         "path/filepath"
+        "strings"
 
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcwallet/wallet"
@@ -136,7 +137,7 @@ func (u *UnlockerService) GenSeed(ctx context.Context,
         //code modify
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
-		u.netParams.Name,
+		normalizeNetwork(u.netParams.Name),
                 in.User_Id)
         //----code end ------
 
@@ -272,7 +273,7 @@ func (u *UnlockerService) InitWallet(ctx context.Context,
         //code modify 
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
-		u.netParams.Name,
+		normalizeNetwork(u.netParams.Name),
                 in.User_Id)
         //----code end ------
 	//netDir := btcwallet.NetworkDir(u.chainDir, u.netParams)
@@ -288,7 +289,7 @@ func (u *UnlockerService) InitWallet(ctx context.Context,
 	// If the wallet already exists, then we'll exit early as we can't
 	// create the wallet if it already exists!
 	if walletExists {
-		return nil, fmt.Errorf("wallet already exists")
+		return nil, fmt.Errorf("wallet already existsnet dir %s\n",netDir)
 	}
 
 	// At this point, we know that the wallet doesn't already exist. So
@@ -338,7 +339,7 @@ func (u *UnlockerService) UnlockWallet(ctx context.Context,
         //code modify
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
-		u.netParams.Name,
+		normalizeNetwork(u.netParams.Name),
                 in.User_Id)
         //----code end ------
 	//netDir := btcwallet.NetworkDir(u.chainDir, u.netParams)
@@ -354,7 +355,8 @@ func (u *UnlockerService) UnlockWallet(ctx context.Context,
 
 	if !walletExists {
 		// Cannot unlock a wallet that does not exist!
-		return nil, fmt.Errorf("wallet not found")
+                
+		return nil, fmt.Errorf("wallet not found..... net dir %s\n",netDir)
 	}
 
 	// Try opening the existing wallet with the provided password.
@@ -399,7 +401,7 @@ func (u *UnlockerService) ChangePassword(ctx context.Context,
            
         netDir := filepath.Join("test_data_PrvW",
 		"graph",
-		u.netParams.Name,
+		normalizeNetwork(u.netParams.Name),
                 in.User_Id)
         //----code end ------
 	//netDir := btcwallet.NetworkDir(u.chainDir, u.netParams)
@@ -490,4 +492,13 @@ func ValidatePassword(password []byte) error {
 	}
 
 	return nil
+}
+// normalizeNetwork returns the common name of a network type used to create
+// file paths. This allows differently versioned networks to use the same path.
+func normalizeNetwork(network string) string {
+	if strings.HasPrefix(network, "testnet") {
+		return "testnet"
+	}
+
+	return network
 }
