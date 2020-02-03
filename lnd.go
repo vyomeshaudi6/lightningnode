@@ -70,6 +70,8 @@ var (
 	// network.
 	networkDir string
         graphDir string
+        //slice created for storeng rpcserver instances
+        RpcserverInstances[]*rpcServer
         UserId string // added userid for multiple server instances and passed to new server func
         // End of ASN.1 time.
 	endOfTime = time.Date(2049, 12, 31, 23, 59, 59, 0, time.UTC)
@@ -273,24 +275,43 @@ func Main(lisCfg ListenerCfg) error {
 	// getListeners is a closure that creates listeners from the
 	// RPCListeners defined in the config. It also returns a cleanup
 	// closure and the server options to use for the GRPC server.
-	getListeners := func() ([]net.Listener, func(), []grpc.ServerOption,
+	getListeners := func(callerservice string) ([]net.Listener, func(), []grpc.ServerOption,
 		error) {
-
 		var grpcListeners []net.Listener
-		for _, grpcEndpoint := range cfg.RPCListeners {
+                //modified added caller service check in order to reserve rpc 1st port for wallet unlocker service and remaining for lightning service 
+                if(callerservice == "walletaction"){
+		 for _, grpcEndpoint := range cfg.RPCListeners {
 			// Start a gRPC server listening for HTTP/2
-			// connections.
+		 	// connections.
 			lis, err := lncfg.ListenOnAddress(grpcEndpoint)
-			if err != nil {
+		 	if err != nil {
 				ltndLog.Errorf("unable to listen on %s",
 					grpcEndpoint)
 				 continue
                                 //return nil, nil, nil, err
-			}
-			grpcListeners = append(grpcListeners,lis)
+			 }
+		       	grpcListeners = append(grpcListeners,lis)
                         break
+		 }
+                } else {
+                   for i , grpcEndpoint := range cfg.RPCListeners {
+			// Start a gRPC server listening for HTTP/2
+		 	// connections.
+                        //skipped the first iteration inorder to save the first rpc port for walletunlocker service
+                          if(i == 0){
+		           continue 
+                          }
+			lis, err := lncfg.ListenOnAddress(grpcEndpoint)
+		 	if err != nil {
+				ltndLog.Errorf("unable to listen on %s",
+					grpcEndpoint)
+				 continue
+                                //return nil, nil, nil, err
+			 }
+		       	grpcListeners = append(grpcListeners,lis)
+                         break
+		  }
 		}
-
 		cleanup := func() {
 			for _, lis := range grpcListeners {
 				lis.Close()
@@ -316,7 +337,7 @@ func Main(lisCfg ListenerCfg) error {
 		}
 
 		// Otherwise we'll return the regular listeners.
-		return getListeners()
+		return getListeners("walletaction")
 	}
         
        	if err != nil {
@@ -331,7 +352,8 @@ func Main(lisCfg ListenerCfg) error {
         for i := 0 ; i < 3 ; i++ {
         walletInitParams.Birthday = time.Now()
         // code modified to get rest proxy set accoring to rpc port i.e linking rpc port and rest proxy port together 
-        restProxyDest := cfg.RPCListeners[i].String()
+        // restproxy des modified linkednd 1st rpc port and 1st rest port for wallet unlocker service 
+        restProxyDest := cfg.RPCListeners[0].String()
 	switch {
 	case strings.Contains(restProxyDest, "0.0.0.0"):
 		restProxyDest = strings.Replace(
@@ -595,8 +617,23 @@ func Main(lisCfg ListenerCfg) error {
 		}
 
 		// Otherwise we'll return the regular listeners.
-		return getListeners()
+		return getListeners("lightningaction")
 	}
+        // restproxy des modified linked 2nd rpc port and 1nd rest port for lightning service  
+        restProxyDest = cfg.RPCListeners[1].String()
+	switch {
+	case strings.Contains(restProxyDest, "0.0.0.0"):
+		restProxyDest = strings.Replace(
+			restProxyDest, "0.0.0.0", "127.0.0.1", 1,
+		)
+
+	case strings.Contains(restProxyDest, "[::]"):
+		restProxyDest = strings.Replace(
+			restProxyDest, "[::]", "[::1]", 1,
+		)
+	}
+      
+
 
 	// Initialize, and register our implementation of the gRPC interface
 	// exported by the rpcServer.
@@ -605,6 +642,9 @@ func Main(lisCfg ListenerCfg) error {
 		restProxyDest, atplManager, server.invoices, tower, tlsCfg,
 		rpcListeners, chainedAcceptor,
 	)
+        //code edit storing instances of rpcserve in slice 
+        RpcserverInstances = append(RpcserverInstances,rpcServer)
+
 	if err != nil {
 		err := fmt.Errorf("Unable to create RPC server: %v", err)
 		ltndLog.Error(err)
@@ -1083,8 +1123,10 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 
 	srv := &http.Server{Handler: mux}
 
-	for _, restEndpoint := range restEndpoints {
-		lis, err := lncfg.TLSListenOnAddress(restEndpoint, tlsConf)
+	for i, restEndpoint := range restEndpoints {
+	   //try changing the logic unnecessary calls evertime rest is set for the same rest port i.e 1st one 
+           if(i==0){
+                lis, err := lncfg.TLSListenOnAddress(restEndpoint, tlsConf)
 		if err != nil {
 			ltndLog.Errorf(
 				"password gRPC proxy unable to listen on %s",
@@ -1105,6 +1147,7 @@ func waitForWalletPassword(restEndpoints []net.Addr,
 			srv.Serve(lis)
 		}()
                 break
+           }
 	}
 
 	// Wait for gRPC and REST servers to be up running.

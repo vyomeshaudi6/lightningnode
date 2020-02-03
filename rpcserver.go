@@ -734,8 +734,12 @@ func (r *rpcServer) Start() error {
 	if err != nil {
 		return err
 	}
-	for _, restEndpoint := range cfg.RESTListeners {
-		lis, err := lncfg.TLSListenOnAddress(restEndpoint, r.tlsCfg)
+	for i, restEndpoint := range cfg.RESTListeners {
+		if(i==0){
+                i=i+1
+                continue
+                }
+                 lis, err := lncfg.TLSListenOnAddress(restEndpoint, r.tlsCfg)
 		if err != nil {
 			ltndLog.Errorf(
 				"gRPC proxy unable to listen on %s",
@@ -2118,6 +2122,15 @@ func (r *rpcServer) fetchActiveChannel(chanPoint wire.OutPoint) (
 // concerning the number of open+pending channels.
 func (r *rpcServer) GetInfo(ctx context.Context,
 	in *lnrpc.GetInfoRequest) (*lnrpc.GetInfoResponse, error) {
+      
+        //checking if userid matched in rpcserverslice and userid request came from client , then returning the data according to the correct rpc server instance. 
+        for i:=0 ; i < len(RpcserverInstances) ; i++ {
+         if(in.User_Id == RpcserverInstances[i].server.User_Id) {
+          fmt.Sprintf("rpc server instance found in slice and id passed matched serverindex : %t",i)
+          r = RpcserverInstances[i]
+          break
+         }        
+        }
 
         // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
         //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
