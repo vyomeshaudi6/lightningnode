@@ -344,6 +344,20 @@ func Main(lisCfg ListenerCfg) error {
 		return err
 	}
 	
+        // code modified single resolved tcp listner for peers on all nodes ,listner.go 
+        addr, err := net.ResolveTCPAddr("tcp", cfg.Listeners[0].String())
+        fmt.Println("addr value to listen tcp func : %t &&&& cfg.Listeners[0].String() value : %t",addr)
+	if err != nil {
+		return  err
+	}
+
+	PeerListner, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		return  err
+	}
+
+
+
 
 	// We wait until the user provides a password over RPC. In case lnd is
 	// started with the --noseedbackup flag, we use the default password
@@ -569,7 +583,7 @@ func Main(lisCfg ListenerCfg) error {
 	// Set up the core server which will listen for incoming peer
 	// connections.
 	server, err := newServer(
-		cfg.Listeners, ChanDB, towerClientDB, activeChainControl,
+		PeerListner,cfg.Listeners, ChanDB, towerClientDB, activeChainControl,
 		idPrivKey, walletInitParams.ChansToRestore, chainedAcceptor,UserId,
 	)
 	if err != nil {

@@ -2624,6 +2624,8 @@ message DebugLevelResponse {
 message PayReqString {
     /// The payment request string to be decoded
     string pay_req = 1;
+    ///vyomesh  The UserId of the current lnd node.
+    string User_Id = 2;
 }
 message PayReq {
     string destination = 1 [json_name = "destination"];
@@ -2830,6 +2832,7 @@ message RestoreChanBackupRequest {
         */
         bytes multi_chan_backup = 2 [ json_name = "multi_chan_backup" ];
       }
+     string User_Id = 3;
 }
 message RestoreBackupResponse {}
 

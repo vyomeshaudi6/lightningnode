@@ -34,9 +34,10 @@ var _ net.Listener = (*Listener)(nil)
 
 // NewListener returns a new net.Listener which enforces the Brontide scheme
 // during both initial connection establishment and data transfer.
-func NewListener(localStatic *btcec.PrivateKey, listenAddr string) (*Listener,
+func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener) (*Listener,
 	error) {
-	addr, err := net.ResolveTCPAddr("tcp", listenAddr)
+	//code modified removed and made single resolved tcp listner in lnd before for loop
+     /* addr, err := net.ResolveTCPAddr("tcp", listenAddr)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +46,7 @@ func NewListener(localStatic *btcec.PrivateKey, listenAddr string) (*Listener,
 	if err != nil {
 		return nil, err
 	}
-
+     */
 	brontideListener := &Listener{
 		localStatic:   localStatic,
 		tcp:           l,

@@ -1282,6 +1282,13 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "User_Id",
+            "description": "/vyomesh  The UserId of the current lnd node.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -3733,6 +3740,9 @@
           "type": "string",
           "format": "byte",
           "description": "*\nThe channels to restore in the packed multi backup format. When using\nREST, this field must be encoded as base64."
+        },
+        "User_Id": {
+          "type": "string"
         }
       }
     },

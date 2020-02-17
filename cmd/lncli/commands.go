@@ -76,10 +76,10 @@ func actionDecorator(f func(*cli.Context) error) func(*cli.Context) error {
                         //-----end/////
                         //custom domain check to get userid from  domain name in cli 
                         fmt.Printf("\nrestlisten domain %s\n",c.GlobalString("rpcserver"))
-                        if( c.GlobalString("rpcserver")[0:(strings.LastIndex(c.GlobalString("rpcserver"),":"))] != "localhost") {
-                        UniqueId= c.GlobalString("rpcserver")[0:(strings.LastIndex(c.GlobalString("rpcserver"),"."))]
+                        //if( c.GlobalString("rpcserver")[0:(strings.LastIndex(c.GlobalString("rpcserver"),":"))] != "localhost") {
+                        //UniqueId= c.GlobalString("rpcserver")[0:(strings.LastIndex(c.GlobalString("rpcserver"),"."))]
                         fmt.Printf("unique id is set now %s \n",UniqueId)
-                        }
+                        //}
 	                if err := f(c); err != nil {
                         s, ok := status.FromError(err)
 
@@ -2227,7 +2227,7 @@ func sendPayment(ctx *cli.Context) error {
 		req := &lnrpc.SendRequest{
 			PaymentRequest: ctx.String("pay_req"),
 			Amt:            ctx.Int64("amt"),
-                        User_Id: UniqueId,
+                        User_Id: ctx.GlobalString("User_Id"),//vyomesh
 		}
 
 		return sendPaymentRequest(ctx, req)
@@ -2333,7 +2333,7 @@ func sendPaymentRequest(ctx *cli.Context, req *lnrpc.SendRequest) error {
 	amt := req.Amt
 
 	if req.PaymentRequest != "" {
-		req := &lnrpc.PayReqString{PayReq: req.PaymentRequest}
+		req := &lnrpc.PayReqString{PayReq: req.PaymentRequest , User_Id: req.User_Id,}//vyomesh
 		resp, err := client.DecodePayReq(context.Background(), req)
 		if err != nil {
 			return err
@@ -2352,7 +2352,7 @@ func sendPaymentRequest(ctx *cli.Context, req *lnrpc.SendRequest) error {
 		}
 	}
 
-	paymentStream, err := client.SendPayment(context.Background())
+	paymentStream, err := client.SendPayment(context.Background())//vyomesh
 	if err != nil {
 		return err
 	}
@@ -2556,7 +2556,7 @@ func sendToRoute(ctx *cli.Context) error {
 	req := &lnrpc.SendToRouteRequest{
 		PaymentHash: rHash,
 		Route:       route,
-                User_Id: UniqueId,
+                User_Id: ctx.GlobalString("User_Id"),//vyomesh
 	}
 
 	return sendToRouteRequest(ctx, req)
@@ -2709,9 +2709,10 @@ func addInvoice(ctx *cli.Context) error {
 		FallbackAddr:    ctx.String("fallback_addr"),
 		Expiry:          ctx.Int64("expiry"),
 		Private:         ctx.Bool("private"),
+                User_Id:	 UniqueId,
 	}
 
-	resp, err := client.AddInvoice(context.Background(), invoice)
+	resp, err := client.AddInvoice(context.Background(), invoice)//vyomesh
 	if err != nil {
 		return err
 	}
@@ -2768,6 +2769,7 @@ func lookupInvoice(ctx *cli.Context) error {
 
 	req := &lnrpc.PaymentHash{
 		RHash: rHash,
+                User_Id: UniqueId,
 	}
 
 	invoice, err := client.LookupInvoice(context.Background(), req)
@@ -3219,6 +3221,7 @@ func decodePayReq(ctx *cli.Context) error {
 
 	resp, err := client.DecodePayReq(ctxb, &lnrpc.PayReqString{
 		PayReq: payreq,
+                User_Id: UniqueId,
 	})
 	if err != nil {
 		return err
@@ -3837,7 +3840,7 @@ func exportChanBackup(ctx *cli.Context) error {
 
 	chanBackup, err := client.ExportAllChannelBackups(
 		ctxb, &lnrpc.ChanBackupExportRequest{
-                
+                       User_Id: UniqueId,
 },
 	)
 	if err != nil {
@@ -3937,7 +3940,7 @@ func verifyChanBackup(ctx *cli.Context) error {
 		return err
 	}
 
-	verifyReq := lnrpc.ChanBackupSnapshot{}
+	verifyReq := lnrpc.ChanBackupSnapshot{User_Id: UniqueId,}
 
 	if backups.GetChanBackups() != nil {
 		verifyReq.SingleChanBackups = backups.GetChanBackups()
@@ -4028,7 +4031,7 @@ func parseChanBackups(ctx *cli.Context) (*lnrpc.RestoreChanBackupRequest, error)
 					},
 				},
 			},
-		}, nil
+		User_Id: ctx.GlobalString("User_Id"),}, nil
 
 	case ctx.IsSet("multi_backup"):
 		packedMulti, err := hex.DecodeString(
@@ -4043,7 +4046,7 @@ func parseChanBackups(ctx *cli.Context) (*lnrpc.RestoreChanBackupRequest, error)
 			Backup: &lnrpc.RestoreChanBackupRequest_MultiChanBackup{
 				MultiChanBackup: packedMulti,
 			},
-		}, nil
+		User_Id: ctx.GlobalString("User_Id"),}, nil
 
 	case ctx.IsSet("multi_file"):
 		packedMulti, err := ioutil.ReadFile(ctx.String("multi_file"))
@@ -4056,7 +4059,7 @@ func parseChanBackups(ctx *cli.Context) (*lnrpc.RestoreChanBackupRequest, error)
 			Backup: &lnrpc.RestoreChanBackupRequest_MultiChanBackup{
 				MultiChanBackup: packedMulti,
 			},
-		}, nil
+		User_Id: ctx.GlobalString("User_Id"),}, nil
 
 	default:
 		return nil, errMissingChanBackup
@@ -4074,7 +4077,7 @@ func restoreChanBackup(ctx *cli.Context) error {
 		return nil
 	}
 
-	var req lnrpc.RestoreChanBackupRequest
+	req := lnrpc.RestoreChanBackupRequest{User_Id: UniqueId,}
 
 	backups, err := parseChanBackups(ctx)
 	if err != nil {

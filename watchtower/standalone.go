@@ -68,17 +68,20 @@ func New(cfg *Config) (*Standalone, error) {
 	// Create a brontide listener on each of the provided listening
 	// addresses. Client should be able to connect to any of open ports to
 	// communicate with this Standalone instance.
-	listeners := make([]net.Listener, 0, len(cfg.ListenAddrs))
-	for _, listenAddr := range cfg.ListenAddrs {
+         
+        //making empty PeerListner just to avoid atchtower peeer actions // later when optimising code need to be modified    
+        var PeerListner *net.TCPListener
+ 	listeners := make([]net.Listener, 0, len(cfg.ListenAddrs))
+	//for _, listenAddr := range cfg.ListenAddrs {
 		listener, err := brontide.NewListener(
-			cfg.NodePrivKey, listenAddr.String(),
+			cfg.NodePrivKey, PeerListner, // here peerlistner is empty 
 		)
 		if err != nil {
 			return nil, err
 		}
 
 		listeners = append(listeners, listener)
-	}
+	//}
 
 	// Initialize the server with its required resources.
 	server, err := wtserver.New(&wtserver.Config{
