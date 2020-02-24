@@ -3248,9 +3248,28 @@ type rpcPaymentRequest struct {
 func (r *rpcServer) SendPayment(stream lnrpc.Lightning_SendPaymentServer) error {
 	var lock sync.Mutex
 
+
+   //vyomesh stream code modify to get user id from stream 
+         req, err := stream.Recv()
+            
+         //checking if userid matched in rpcserverslice and userid request came from client , then returning the data according to the correct rpc server instance. 
+        for i:=0 ; i < len(RpcserverInstances) ; i++ {
+         if(req.User_Id == RpcserverInstances[i].server.User_Id) {
+            r = RpcserverInstances[i]
+          break
+         }        
+        }
+
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
+       if(req.User_Id != r.server.User_Id){
+         return errors.New("Either wallet is not created with the id or please unlock the wallet first ")
+        }
+
+
 	return r.sendPayment(&paymentStream{
 		recv: func() (*rpcPaymentRequest, error) {
-			req, err := stream.Recv()
+			//req, err = stream.Recv()
 			if err != nil {
 				return nil, err
 			}
@@ -3276,9 +3295,27 @@ func (r *rpcServer) SendPayment(stream lnrpc.Lightning_SendPaymentServer) error 
 func (r *rpcServer) SendToRoute(stream lnrpc.Lightning_SendToRouteServer) error {
 	var lock sync.Mutex
 
+       //vyomesh stream code modify to get user id from stream 
+         req, err := stream.Recv()
+            
+         //checking if userid matched in rpcserverslice and userid request came from client , then returning the data according to the correct rpc server instance. 
+        for i:=0 ; i < len(RpcserverInstances) ; i++ {
+         if(req.User_Id == RpcserverInstances[i].server.User_Id) {
+            r = RpcserverInstances[i]
+          break
+         }        
+        }
+
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
+       if(req.User_Id != r.server.User_Id){
+         return errors.New("Either wallet is not created with the id or please unlock the wallet first ")
+        }
+
+
 	return r.sendPayment(&paymentStream{
 		recv: func() (*rpcPaymentRequest, error) {
-			req, err := stream.Recv()
+			req, err = stream.Recv()
 			if err != nil {
 				return nil, err
 			}
@@ -3752,6 +3789,22 @@ func (r *rpcServer) sendPayment(stream *paymentStream) error {
 func (r *rpcServer) SendPaymentSync(ctx context.Context,
 	nextPayment *lnrpc.SendRequest) (*lnrpc.SendResponse, error) {
 
+       //checking if userid matched in rpcserverslice and userid request came from client , then returning the data according to the correct rpc server instance. 
+        for i:=0 ; i < len(RpcserverInstances) ; i++ {
+         if(nextPayment.User_Id == RpcserverInstances[i].server.User_Id) {
+          fmt.Sprintf("rpc server instance found in slice and id passed matched serverindex : %t",i)
+          r = RpcserverInstances[i]
+          break
+         }        
+        }
+
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
+        if(nextPayment.User_Id != r.server.User_Id){
+           return nil, fmt.Errorf("Either wallet is not created with the id %s or please unlock the wallet first ",nextPayment.User_Id)
+        }
+
+
 	return r.sendPaymentSync(ctx, &rpcPaymentRequest{
 		SendRequest: nextPayment,
 	})
@@ -3763,6 +3816,22 @@ func (r *rpcServer) SendPaymentSync(ctx context.Context,
 // hex strings.
 func (r *rpcServer) SendToRouteSync(ctx context.Context,
 	req *lnrpc.SendToRouteRequest) (*lnrpc.SendResponse, error) {
+
+       //checking if userid matched in rpcserverslice and userid request came from client , then returning the data according to the correct rpc server instance. 
+        for i:=0 ; i < len(RpcserverInstances) ; i++ {
+         if(req.User_Id == RpcserverInstances[i].server.User_Id) {
+          fmt.Sprintf("rpc server instance found in slice and id passed matched serverindex : %t",i)
+          r = RpcserverInstances[i]
+          break
+         }        
+        }
+
+        // code added to check user id from lncli cmd and from server instance so as to pass data only if userid 
+        //matched with the right port and id on server insatnce since each port has its own  seprate server instance  
+        if(req.User_Id != r.server.User_Id){
+           return nil, fmt.Errorf("Either wallet is not created with the id %s or please unlock the wallet first ",req.User_Id)
+        }
+
 
 	if req.Route == nil {
 		return nil, fmt.Errorf("unable to send, no routes provided")
@@ -5797,6 +5866,7 @@ type chanAcceptInfo struct {
 // through a single persistent connection.
 func (r *rpcServer) ChannelAcceptor(stream lnrpc.Lightning_ChannelAcceptorServer) error {
 	chainedAcceptor := r.chanPredicate
+
 
 	// Create two channels to handle requests and responses respectively.
 	newRequests := make(chan *chanAcceptInfo)

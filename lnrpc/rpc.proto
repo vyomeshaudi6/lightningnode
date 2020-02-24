@@ -958,7 +958,7 @@ message SendRequest {
     values must be encoded as base64.
     */
     map<uint64, bytes> dest_tlv = 11;
-    ///  The UserId of the current lnd node.
+    //The UserId of the current lnd node.
     string User_Id = 13;
 }
 

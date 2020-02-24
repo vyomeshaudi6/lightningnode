@@ -1138,7 +1138,7 @@ type SendRequest struct {
 	//application specific data during the payment attempt. When using REST, the
 	//values must be encoded as base64.
 	DestTlv map[uint64][]byte `protobuf:"bytes,11,rep,name=dest_tlv,json=destTlv,proto3" json:"dest_tlv,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	///  The UserId of the current lnd node.
+	//The UserId of the current lnd node.
 	User_Id              string   `protobuf:"bytes,13,opt,name=User_Id,json=UserId,proto3" json:"User_Id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`

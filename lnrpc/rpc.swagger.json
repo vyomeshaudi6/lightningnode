@@ -3944,7 +3944,7 @@
         },
         "User_Id": {
           "type": "string",
-          "description": "/  The UserId of the current lnd node."
+          "description": "The UserId of the current lnd node."
         }
       }
     },

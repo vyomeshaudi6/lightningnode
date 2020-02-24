@@ -2227,7 +2227,7 @@ func sendPayment(ctx *cli.Context) error {
 		req := &lnrpc.SendRequest{
 			PaymentRequest: ctx.String("pay_req"),
 			Amt:            ctx.Int64("amt"),
-                        User_Id: ctx.GlobalString("User_Id"),//vyomesh
+                        User_Id:        ctx.GlobalString("User_Id"),//vyomesh
 		}
 
 		return sendPaymentRequest(ctx, req)
@@ -2270,9 +2270,9 @@ func sendPayment(ctx *cli.Context) error {
 	}
 
 	req := &lnrpc.SendRequest{
-		Dest: destNode,
-		Amt:  amount,
-                User_Id: UniqueId,
+		Dest: 		destNode,
+		Amt:  		amount,
+                User_Id:	ctx.GlobalString("User_Id"),
 	}
 
 	if ctx.Bool("debug_send") && (ctx.IsSet("payment_hash") || args.Present()) {
@@ -3221,7 +3221,7 @@ func decodePayReq(ctx *cli.Context) error {
 
 	resp, err := client.DecodePayReq(ctxb, &lnrpc.PayReqString{
 		PayReq: payreq,
-                User_Id: UniqueId,
+                User_Id: ctx.GlobalString("User_Id"),
 	})
 	if err != nil {
 		return err
