@@ -343,7 +343,7 @@ func Main(lisCfg ListenerCfg) error {
        	if err != nil {
 		return err
 	}
-/* code been shifted inside forloop to make multiple peer listner  need to revert back her to get one peer listner *****	
+ 
         // code modified single resolved tcp listner for peers on all nodes ,listner.go 
         addr, err := net.ResolveTCPAddr("tcp", cfg.Listeners[0].String())
         fmt.Println("addr value to listen tcp func : %t &&&& cfg.Listeners[0].String() value : %t",addr)
@@ -356,8 +356,6 @@ func Main(lisCfg ListenerCfg) error {
 		return  err
 	}
 
-*/
-
 
 	// We wait until the user provides a password over RPC. In case lnd is
 	// started with the --noseedbackup flag, we use the default password
@@ -365,21 +363,6 @@ func Main(lisCfg ListenerCfg) error {
         // for loop edit
         for i := 0 ; i < 3 ; i++ {
         walletInitParams.Birthday = time.Now()
-//************tempory code for multiple p[eer listner later delete these listner for single peer port 
-
-       // code modified single resolved tcp listner for peers on all nodes ,listner.go 
-        addr, err := net.ResolveTCPAddr("tcp", cfg.Listeners[i].String())
-        fmt.Println("addr value to listen tcp func : %t &&&& cfg.Listeners[0].String() value : %t",addr)
-	if err != nil {
-		return  err
-	}
-
-	PeerListner, err := net.ListenTCP("tcp", addr)
-	if err != nil {
-		return  err
-	}
-//*****************************************************************
-
         // code modified to get rest proxy set accoring to rpc port i.e linking rpc port and rest proxy port together 
         // restproxy des modified linkednd 1st rpc port and 1st rest port for wallet unlocker service 
         restProxyDest := cfg.RPCListeners[0].String()
