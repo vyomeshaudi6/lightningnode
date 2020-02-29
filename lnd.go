@@ -343,7 +343,26 @@ func Main(lisCfg ListenerCfg) error {
        	if err != nil {
 		return err
 	}
- 
+  
+ //------------------------------*******--------------------------
+        listeners := make([]*net.TCPListener, len(cfg.Listeners))
+	for i, tcplistenAddr := range cfg.Listeners {
+		addr, err := net.ResolveTCPAddr("tcp", tcplistenAddr.String())
+	        if err != nil {
+		   return err
+	        }
+
+	        l, err := net.ListenTCP("tcp", addr)
+	        if err != nil {
+		return err
+		}
+
+		listeners[i]= l
+	}      
+
+
+
+  /*
         // code modified single resolved tcp listner for peers on all nodes ,listner.go 
         addr, err := net.ResolveTCPAddr("tcp", cfg.Listeners[0].String())
         fmt.Println("addr value to listen tcp func : %t &&&& cfg.Listeners[0].String() value : %t",addr)
@@ -355,7 +374,17 @@ func Main(lisCfg ListenerCfg) error {
 	if err != nil {
 		return  err
 	}
+   //vyomesh tcp2 listner resolved for 2 peer port handshake issue 
+         addr, err = net.ResolveTCPAddr("tcp","localhost:10005")//change hardcode port  if brontide.conn.go  hardcoded port is changed  is changed.
+	if err != nil {
+		return  err
+	}
 
+	_, err = net.ListenTCP("tcp", addr)
+	if err != nil {
+		return  err
+	}
+*/
 
 	// We wait until the user provides a password over RPC. In case lnd is
 	// started with the --noseedbackup flag, we use the default password
@@ -581,7 +610,7 @@ func Main(lisCfg ListenerCfg) error {
 	// Set up the core server which will listen for incoming peer
 	// connections.
 	server, err := newServer(
-		PeerListner,cfg.Listeners, ChanDB, towerClientDB, activeChainControl,
+		listeners,cfg.Listeners, ChanDB, towerClientDB, activeChainControl,
 		idPrivKey, walletInitParams.ChansToRestore, chainedAcceptor,UserId,
 	)
 	if err != nil {

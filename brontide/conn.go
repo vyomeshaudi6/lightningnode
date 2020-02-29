@@ -34,10 +34,10 @@ var _ net.Conn = (*Conn)(nil)
 // a non-nil error is returned.
 func Dial(localPriv *btcec.PrivateKey, netAddr *lnwire.NetAddress,
 	dialer func(string, string) (net.Conn, error)) (*Conn, error) {
-	ipAddr := netAddr.Address.String()
+	//ipAddr := netAddr.Address.String()
 	var conn net.Conn
 	var err error
-	conn, err = dialer("tcp", ipAddr)
+	conn, err = dialer("tcp", "localhost:10005")//vyomesh two tcp port listen modification
 	if err != nil {
 		return nil, err
 	}

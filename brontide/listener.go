@@ -23,6 +23,7 @@ type Listener struct {
 	localStatic *btcec.PrivateKey
 
 	tcp *net.TCPListener
+        //tcp1 *net.TCPListener
 
 	handshakeSema chan struct{}
 	conns         chan maybeConn
@@ -34,23 +35,12 @@ var _ net.Listener = (*Listener)(nil)
 
 // NewListener returns a new net.Listener which enforces the Brontide scheme
 // during both initial connection establishment and data transfer.
-func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener) (*Listener,
-	error) {
-	//code modified removed and made single resolved tcp listner in lnd before for loop
-     /* addr, err := net.ResolveTCPAddr("tcp", listenAddr)
-	if err != nil {
-		return nil, err
-	}
-
-	l, err := net.ListenTCP("tcp", addr)
-	if err != nil {
-		return nil, err
-	}
-     */
+func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener) (*Listener, error) {
+	
 	brontideListener := &Listener{
 		localStatic:   localStatic,
 		tcp:           l,
-		handshakeSema: make(chan struct{}, defaultHandshakes),
+          	handshakeSema: make(chan struct{}, defaultHandshakes),
 		conns:         make(chan maybeConn),
 		quit:          make(chan struct{}),
 	}
@@ -85,6 +75,17 @@ func (l *Listener) listen() {
 		}
 
 		go l.doHandshake(conn)
+/*
+                //vyomesh code modified  for 2 peer port handshake issue making 2 connection for every  lnd node  at end points 10004 and 10005
+                 conn1, err := l.tcp1.Accept()
+		if err != nil {
+			l.rejectConn(err)
+			l.handshakeSema <- struct{}{}
+			continue
+		}
+
+		go l.doHandshake(conn1)
+*/
 	}
 }
 
@@ -245,13 +246,14 @@ func (l *Listener) Close() error {
 	default:
 		close(l.quit)
 	}
-
+        
+      
 	return l.tcp.Close()
 }
 
 // Addr returns the listener's network address.
 //
 // Part of the net.Listener interface.
-func (l *Listener) Addr() net.Addr {
+func (l *Listener) Addr() net.Addr{
 	return l.tcp.Addr()
 }

@@ -309,25 +309,22 @@ func noiseDial(idPriv *btcec.PrivateKey) func(net.Addr) (net.Conn, error) {
 
 // newServer creates a new instance of the server which is to listen using the
 // passed listener address.
-func newServer(l *net.TCPListener,listenAddrs []net.Addr, chanDB *channeldb.DB,
+func newServer(tcplisteners []*net.TCPListener,listenAddrs []net.Addr, chanDB *channeldb.DB,
 	towerClientDB *wtdb.ClientDB, cc *chainControl,
 	privKey *btcec.PrivateKey,
 	chansToRestore walletunlocker.ChannelsToRecover,
 	chanPredicate chanacceptor.ChannelAcceptor, UserId string) (*server, error) {
 
 	var err error
-
-	listeners := make([]net.Listener, 1)////----------------len(listenAddrs))
-	//for i, listenAddr := range listenAddrs {
-		// Note: though brontide.NewListener uses ResolveTCPAddr, it
-		// doesn't need to call the general lndResolveTCP function
-		// since we are resolving a local address.
-		listeners[0], err = brontide.NewListener(
-			privKey, l,
+        listeners := make([]net.Listener, len(tcplisteners))
+	for i, tcplistenAddr := range tcplisteners {
+		listeners[i], err = brontide.NewListener(
+			privKey, tcplistenAddr,
 		)
 		if err != nil {
-                      return nil, err 
+			return nil, err
 		}
+	}
                         
 	globalFeatures := lnwire.NewRawFeatureVector()
 
