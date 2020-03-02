@@ -313,13 +313,13 @@ func newServer(tcplisteners []*net.TCPListener,listenAddrs []net.Addr, chanDB *c
 	towerClientDB *wtdb.ClientDB, cc *chainControl,
 	privKey *btcec.PrivateKey,
 	chansToRestore walletunlocker.ChannelsToRecover,
-	chanPredicate chanacceptor.ChannelAcceptor, UserId string) (*server, error) {
+	chanPredicate chanacceptor.ChannelAcceptor, UserId string ,Userid_pubkey_mapping map[string]string) (*server, error) {
 
 	var err error
         listeners := make([]net.Listener, len(tcplisteners))
 	for i, tcplistenAddr := range tcplisteners {
 		listeners[i], err = brontide.NewListener(
-			privKey, tcplistenAddr,
+			privKey, tcplistenAddr,Userid_pubkey_mapping,UserId,
 		)
 		if err != nil {
 			return nil, err

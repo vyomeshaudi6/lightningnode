@@ -75,7 +75,7 @@ var (
         UserId string // added userid for multiple server instances and passed to new server func
         // End of ASN.1 time.
 	endOfTime = time.Date(2049, 12, 31, 23, 59, 59, 0, time.UTC)
-
+        Userid_pubkey_mapping make(map[string]string)
 	// Max serial number.
 	serialNumberLimit = new(big.Int).Lsh(big.NewInt(1), 128)
 
@@ -606,12 +606,13 @@ func Main(lisCfg ListenerCfg) error {
       
 	// Initialize the ChainedAcceptor.
 	chainedAcceptor := chanacceptor.NewChainedAcceptor()
-
+        //vyomesh code modified added server file userid and pubkeu value pair and passed to serverinstance 
+        Userid_pubkey_mapping[UserId] = idPrivKey
 	// Set up the core server which will listen for incoming peer
 	// connections.
 	server, err := newServer(
 		listeners,cfg.Listeners, ChanDB, towerClientDB, activeChainControl,
-		idPrivKey, walletInitParams.ChansToRestore, chainedAcceptor,UserId,
+		idPrivKey, walletInitParams.ChansToRestore, chainedAcceptor,UserId,Userid_pubkey_mapping,
 	)
 	if err != nil {
 		err := fmt.Errorf("Unable to create server: %v", err)

@@ -35,7 +35,7 @@ var _ net.Listener = (*Listener)(nil)
 
 // NewListener returns a new net.Listener which enforces the Brontide scheme
 // during both initial connection establishment and data transfer.
-func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener) (*Listener, error) {
+func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener ,Userid_pubkey_mapping map[string]string ,UserId string) (*Listener, error) {
 	
 	brontideListener := &Listener{
 		localStatic:   localStatic,
@@ -75,17 +75,6 @@ func (l *Listener) listen() {
 		}
 
 		go l.doHandshake(conn)
-/*
-                //vyomesh code modified  for 2 peer port handshake issue making 2 connection for every  lnd node  at end points 10004 and 10005
-                 conn1, err := l.tcp1.Accept()
-		if err != nil {
-			l.rejectConn(err)
-			l.handshakeSema <- struct{}{}
-			continue
-		}
-
-		go l.doHandshake(conn1)
-*/
 	}
 }
 
