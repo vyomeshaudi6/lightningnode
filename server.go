@@ -300,23 +300,23 @@ func parseAddr(address string) (net.Addr, error) {
 
 // noiseDial is a factory function which creates a connmgr compliant dialing
 // function by returning a closure which includes the server's identity key.
-func noiseDial(idPriv *btcec.PrivateKey) func(net.Addr) (net.Conn, error) {
+func noiseDial(idPriv *btcec.PrivateKey,User_Id string ) func(net.Addr) (net.Conn, error) {
 	return func(a net.Addr) (net.Conn, error) {
 		lnAddr := a.(*lnwire.NetAddress)
-		return brontide.Dial(idPriv, lnAddr, cfg.net.Dial)
+		return brontide.Dial(idPriv, lnAddr, cfg.net.Dial,User_Id)
 	}
 }
 
 // newServer creates a new instance of the server which is to listen using the
 // passed listener address.
-func newServer(tcplisteners []*net.TCPListener,listenAddrs []net.Addr, chanDB *channeldb.DB,
+func newServer(listeners []net.Listener,listenAddrs []net.Addr, chanDB *channeldb.DB,
 	towerClientDB *wtdb.ClientDB, cc *chainControl,
 	privKey *btcec.PrivateKey,
 	chansToRestore walletunlocker.ChannelsToRecover,
-	chanPredicate chanacceptor.ChannelAcceptor, UserId string ,Userid_pubkey_mapping map[string]string) (*server, error) {
+	chanPredicate chanacceptor.ChannelAcceptor, UserId string ,Userid_pubkey_mapping map[string]*btcec.PrivateKey) (*server, error) {
 
 	var err error
-        listeners := make([]net.Listener, len(tcplisteners))
+   /*   listeners := make([]net.Listener, len(tcplisteners))
 	for i, tcplistenAddr := range tcplisteners {
 		listeners[i], err = brontide.NewListener(
 			privKey, tcplistenAddr,Userid_pubkey_mapping,UserId,
@@ -325,7 +325,7 @@ func newServer(tcplisteners []*net.TCPListener,listenAddrs []net.Addr, chanDB *c
 			return nil, err
 		}
 	}
-                        
+   */                     
 	globalFeatures := lnwire.NewRawFeatureVector()
 
 	// Only if we're not being forced to use the legacy onion format, will
@@ -1181,7 +1181,7 @@ func newServer(tcplisteners []*net.TCPListener,listenAddrs []net.Addr, chanDB *c
 		OnAccept:       s.InboundPeerConnected,
 		RetryDuration:  time.Second * 5,
 		TargetOutbound: 100,
-		Dial:           noiseDial(s.identityPriv),
+		Dial:           noiseDial(s.identityPriv,s.User_Id),
 		OnConnection:   s.OutboundPeerConnected,
 	})
 	if err != nil {
@@ -1783,7 +1783,7 @@ func (s *server) peerBootstrapper(numTargetPeers uint32,
 					// TODO(roasbeef): can do AS, subnet,
 					// country diversity, etc
 					errChan := make(chan error, 1)
-					s.connectToPeer(a, errChan)
+					s.connectToPeer(a, errChan,s.User_Id)
 					select {
 					case err := <-errChan:
 						if err == nil {
@@ -1885,7 +1885,7 @@ func (s *server) initialPeerBootstrap(ignore map[autopilot.NodeID]struct{},
 				defer wg.Done()
 
 				errChan := make(chan error, 1)
-				go s.connectToPeer(addr, errChan)
+				go s.connectToPeer(addr, errChan,s.User_Id)
 
 				// We'll only allow this connection attempt to
 				// take up to 3 seconds. This allows us to move
@@ -3099,7 +3099,7 @@ type openChanReq struct {
 // connection is established, or the initial handshake process fails.
 //
 // NOTE: This function is safe for concurrent access.
-func (s *server) ConnectToPeer(addr *lnwire.NetAddress, perm bool) error {
+func (s *server) ConnectToPeer(addr *lnwire.NetAddress, perm bool , User_Id string) error {
 	targetPub := string(addr.IdentityKey.SerializeCompressed())
 
 	// Acquire mutex, but use explicit unlocking instead of defer for
@@ -3160,7 +3160,7 @@ func (s *server) ConnectToPeer(addr *lnwire.NetAddress, perm bool) error {
 	// the crypto negotiation breaks down, then return an error to the
 	// caller.
 	errChan := make(chan error, 1)
-	s.connectToPeer(addr, errChan)
+	s.connectToPeer(addr, errChan, User_Id)
 
 	select {
 	case err := <-errChan:
@@ -3173,8 +3173,8 @@ func (s *server) ConnectToPeer(addr *lnwire.NetAddress, perm bool) error {
 // connectToPeer establishes a connection to a remote peer. errChan is used to
 // notify the caller if the connection attempt has failed. Otherwise, it will be
 // closed.
-func (s *server) connectToPeer(addr *lnwire.NetAddress, errChan chan<- error) {
-	conn, err := brontide.Dial(s.identityPriv, addr, cfg.net.Dial)
+func (s *server) connectToPeer(addr *lnwire.NetAddress, errChan chan<- error, User_Id string) {
+	conn, err := brontide.Dial(s.identityPriv, addr, cfg.net.Dial, User_Id)
 	if err != nil {
 		srvrLog.Errorf("Unable to connect to %v: %v", addr, err)
 		select {

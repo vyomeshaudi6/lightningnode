@@ -109,7 +109,7 @@ type AuthDialer func(localPriv *btcec.PrivateKey, netAddr *lnwire.NetAddress,
 func AuthDial(localPriv *btcec.PrivateKey, netAddr *lnwire.NetAddress,
 	dialer func(string, string) (net.Conn, error)) (wtserver.Peer, error) {
 
-	return brontide.Dial(localPriv, netAddr, dialer)
+	return brontide.Dial(localPriv, netAddr, dialer,"deletethis")//vyomesh
 }
 
 // SecretKeyRing abstracts the ability to derive HD private keys given a

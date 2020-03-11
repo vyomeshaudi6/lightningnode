@@ -33,7 +33,7 @@ var _ net.Conn = (*Conn)(nil)
 // public key. In the case of a handshake failure, the connection is closed and
 // a non-nil error is returned.
 func Dial(localPriv *btcec.PrivateKey, netAddr *lnwire.NetAddress,
-	dialer func(string, string) (net.Conn, error)) (*Conn, error) {
+	dialer func(string, string) (net.Conn, error),User_Id string) (*Conn, error) {
 	//ipAddr := netAddr.Address.String()
 	var conn net.Conn
 	var err error
@@ -41,7 +41,13 @@ func Dial(localPriv *btcec.PrivateKey, netAddr *lnwire.NetAddress,
 	if err != nil {
 		return nil, err
 	}
-
+   
+     /*   //vyomesh userid received from calling peer on opoc server 
+	_, err = conn.Write([]byte(User_Id))
+    */
+        if err != nil {
+		return nil, err
+	}
 	b := &Conn{
 		conn:  conn,
 		noise: NewBrontideMachine(true, localPriv, netAddr.IdentityKey),

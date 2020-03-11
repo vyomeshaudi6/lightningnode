@@ -54,6 +54,7 @@ import (
 	"github.com/lightningnetwork/lnd/walletunlocker"
 	"github.com/lightningnetwork/lnd/watchtower"
 	"github.com/lightningnetwork/lnd/watchtower/wtdb"
+        "github.com/lightningnetwork/lnd/brontide"
 )
 
 const (
@@ -75,7 +76,7 @@ var (
         UserId string // added userid for multiple server instances and passed to new server func
         // End of ASN.1 time.
 	endOfTime = time.Date(2049, 12, 31, 23, 59, 59, 0, time.UTC)
-        Userid_pubkey_mapping make(map[string]string)
+        
 	// Max serial number.
 	serialNumberLimit = new(big.Int).Lsh(big.NewInt(1), 128)
 
@@ -345,7 +346,7 @@ func Main(lisCfg ListenerCfg) error {
 	}
   
  //------------------------------*******--------------------------
-        listeners := make([]*net.TCPListener, len(cfg.Listeners))
+ /*      listeners := make([]*net.TCPListener, len(cfg.Listeners))
 	for i, tcplistenAddr := range cfg.Listeners {
 		addr, err := net.ResolveTCPAddr("tcp", tcplistenAddr.String())
 	        if err != nil {
@@ -359,8 +360,19 @@ func Main(lisCfg ListenerCfg) error {
 
 		listeners[i]= l
 	}      
-
-
+*/
+  /*      var localstatic *btcec.PrivateKey
+        listeners := make([]net.Listener, len(cfg.Listeners))
+	for i, listenAddr := range cfg.Listeners {
+		
+		listeners[i], err = brontide.NewListener(
+			localstatic, listenAddr.String(),Userid_pubkey_mapping,
+		)
+		if err != nil {
+			return  err
+		}
+	}
+   */
 
   /*
         // code modified single resolved tcp listner for peers on all nodes ,listner.go 
@@ -385,6 +397,9 @@ func Main(lisCfg ListenerCfg) error {
 		return  err
 	}
 */
+        
+	listeners := make([]net.Listener, len(cfg.Listeners))
+        Userid_pubkey_mapping := make(map[string]*btcec.PrivateKey)
 
 	// We wait until the user provides a password over RPC. In case lnd is
 	// started with the --noseedbackup flag, we use the default password
@@ -608,6 +623,20 @@ func Main(lisCfg ListenerCfg) error {
 	chainedAcceptor := chanacceptor.NewChainedAcceptor()
         //vyomesh code modified added server file userid and pubkeu value pair and passed to serverinstance 
         Userid_pubkey_mapping[UserId] = idPrivKey
+        //vyomesh on 1st loop iteration made brontide listeners
+          if i==0 {
+   	        
+		for i, listenAddr := range cfg.Listeners {
+		
+		listeners[i], err = brontide.NewListener(
+			idPrivKey, listenAddr.String(),Userid_pubkey_mapping,
+		)
+		if err != nil {
+			return  err
+		}
+		}
+          }
+       
 	// Set up the core server which will listen for incoming peer
 	// connections.
 	server, err := newServer(

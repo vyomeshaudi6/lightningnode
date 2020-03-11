@@ -35,8 +35,17 @@ var _ net.Listener = (*Listener)(nil)
 
 // NewListener returns a new net.Listener which enforces the Brontide scheme
 // during both initial connection establishment and data transfer.
-func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener ,Userid_pubkey_mapping map[string]string ,UserId string) (*Listener, error) {
+func NewListener(localStatic *btcec.PrivateKey,listenAddr string,Userid_pubkey_mapping map[string]*btcec.PrivateKey) (*Listener, error) {
 	
+        addr, err := net.ResolveTCPAddr("tcp", listenAddr)
+	if err != nil {
+		return nil, err
+	}
+
+	l, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		return nil, err
+	}
 	brontideListener := &Listener{
 		localStatic:   localStatic,
 		tcp:           l,
@@ -49,7 +58,7 @@ func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener ,Userid_pubkey
 		brontideListener.handshakeSema <- struct{}{}
 	}
 
-	go brontideListener.listen()
+	go brontideListener.listen(Userid_pubkey_mapping)
 
 	return brontideListener, nil
 }
@@ -59,7 +68,7 @@ func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener ,Userid_pubkey
 // defaultHandshakes will be active at any given time.
 //
 // NOTE: This method must be run as a goroutine.
-func (l *Listener) listen() {
+func (l *Listener) listen(Userid_pubkey_mapping map[string]*btcec.PrivateKey) {
 	for {
 		select {
 		case <-l.handshakeSema:
@@ -74,7 +83,7 @@ func (l *Listener) listen() {
 			continue
 		}
 
-		go l.doHandshake(conn)
+		go l.doHandshake(conn, Userid_pubkey_mapping)
 	}
 }
 
@@ -88,7 +97,7 @@ func rejectedConnErr(err error, remoteAddr string) error {
 // doHandshake asynchronously performs the brontide handshake, so that it does
 // not block the main accept loop. This prevents peers that delay writing to the
 // connection from block other connection attempts.
-func (l *Listener) doHandshake(conn net.Conn) {
+func (l *Listener) doHandshake(conn net.Conn, Userid_pubkey_mapping map[string]*btcec.PrivateKey) {
 	defer func() { l.handshakeSema <- struct{}{} }()
 
 	select {
@@ -96,10 +105,19 @@ func (l *Listener) doHandshake(conn net.Conn) {
 		return
 	default:
 	}
-
 	remoteAddr := conn.RemoteAddr().String()
-
-	brontideConn := &Conn{
+       //vyomesh userid received from calling peer on opoch server 
+  /*      var userId []byte 
+	_, err := io.ReadFull(conn,userId)
+        if err != nil {
+		l.rejectConn(rejectedConnErr(err, remoteAddr))
+		return
+	}
+        User_Id := string(userId)
+        l.localStatic =  Userid_pubkey_mapping[User_Id]
+   */
+	
+        brontideConn := &Conn{
 		conn:  conn,
 		noise: NewBrontideMachine(false, l.localStatic, nil),
 	}
@@ -107,7 +125,7 @@ func (l *Listener) doHandshake(conn net.Conn) {
 	// We'll ensure that we get ActOne from the remote peer in a timely
 	// manner. If they don't respond within 1s, then we'll kill the
 	// connection.
-	err := conn.SetReadDeadline(time.Now().Add(handshakeReadTimeout))
+	err = conn.SetReadDeadline(time.Now().Add(handshakeReadTimeout))
 	if err != nil {
 		brontideConn.conn.Close()
 		l.rejectConn(rejectedConnErr(err, remoteAddr))

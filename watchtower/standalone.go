@@ -70,11 +70,12 @@ func New(cfg *Config) (*Standalone, error) {
 	// communicate with this Standalone instance.
          
         //making empty PeerListner just to avoid atchtower peeer actions // later when optimising code need to be modified    
-        var PeerListner *net.TCPListener
+       
+        var deletethislater map[string]*btcec.PrivateKey
  	listeners := make([]net.Listener, 0, len(cfg.ListenAddrs))
 	//for _, listenAddr := range cfg.ListenAddrs {
 		listener, err := brontide.NewListener(
-			cfg.NodePrivKey, PeerListner, // here peerlistner is empty 
+			cfg.NodePrivKey, "deletethis",deletethislater, // here peerlistner is empty 
 		)
 		if err != nil {
 			return nil, err

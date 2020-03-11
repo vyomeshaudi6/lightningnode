@@ -1456,7 +1456,7 @@ func (r *rpcServer) ConnectPeer(ctx context.Context,
 	rpcsLog.Debugf("[connectpeer] requested connection to %x@%s",
 		peerAddr.IdentityKey.SerializeCompressed(), peerAddr.Address)
 
-	if err := r.server.ConnectToPeer(peerAddr, in.Perm); err != nil {
+	if err := r.server.ConnectToPeer(peerAddr, in.Perm ,in.User_Id); err != nil {
 		rpcsLog.Errorf("[connectpeer]: error connecting to peer: %v , peeraddr : %s |||| in.perm : %s||||", err,peerAddr,in.Perm)
 		return nil, err
 	}
