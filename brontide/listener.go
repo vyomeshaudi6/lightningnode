@@ -21,11 +21,8 @@ const defaultHandshakes = 1000
 // connection.
 type Listener struct {
 	localStatic *btcec.PrivateKey
-
 	tcp *net.TCPListener
-        //tcp1 *net.TCPListener
-
-	handshakeSema chan struct{}
+        handshakeSema chan struct{}
 	conns         chan maybeConn
 	quit          chan struct{}
 }
@@ -35,12 +32,27 @@ var _ net.Listener = (*Listener)(nil)
 
 // NewListener returns a new net.Listener which enforces the Brontide scheme
 // during both initial connection establishment and data transfer.
+<<<<<<< Updated upstream
 func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener ,Userid_pubkey_mapping map[string]string ,UserId string) (*Listener, error) {
 	
+=======
+func NewListener(localStatic *btcec.PrivateKey,listenAddr string) (*Listener, error) {
+	
+        addr, err := net.ResolveTCPAddr("tcp", listenAddr)
+	if err != nil {
+		return nil, err
+	}
+
+	l, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		return nil, err
+	}
+
+>>>>>>> Stashed changes
 	brontideListener := &Listener{
 		localStatic:   localStatic,
 		tcp:           l,
-          	handshakeSema: make(chan struct{}, defaultHandshakes),
+		handshakeSema: make(chan struct{}, defaultHandshakes),
 		conns:         make(chan maybeConn),
 		quit:          make(chan struct{}),
 	}
@@ -98,8 +110,13 @@ func (l *Listener) doHandshake(conn net.Conn) {
 	}
 
 	remoteAddr := conn.RemoteAddr().String()
+<<<<<<< Updated upstream
 
 	brontideConn := &Conn{
+=======
+  	
+        brontideConn := &Conn{
+>>>>>>> Stashed changes
 		conn:  conn,
 		noise: NewBrontideMachine(false, l.localStatic, nil),
 	}
@@ -225,7 +242,7 @@ func (l *Listener) Accept() (net.Conn, error) {
 	}
 }
 
-// Close closes the listener.  Any blocked Accept operations will be unblocked
+// Close closes the listener. Any blocked Accept operations will be unblocked
 // and return errors.
 //
 // Part of the net.Listener interface.

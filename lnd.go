@@ -54,6 +54,10 @@ import (
 	"github.com/lightningnetwork/lnd/walletunlocker"
 	"github.com/lightningnetwork/lnd/watchtower"
 	"github.com/lightningnetwork/lnd/watchtower/wtdb"
+<<<<<<< Updated upstream
+=======
+       
+>>>>>>> Stashed changes
 )
 
 const (
@@ -344,6 +348,7 @@ func Main(lisCfg ListenerCfg) error {
 		return err
 	}
   
+<<<<<<< Updated upstream
  //------------------------------*******--------------------------
         listeners := make([]*net.TCPListener, len(cfg.Listeners))
 	for i, tcplistenAddr := range cfg.Listeners {
@@ -385,6 +390,11 @@ func Main(lisCfg ListenerCfg) error {
 		return  err
 	}
 */
+=======
+        
+	//listeners := make([]net.Listener, len(cfg.Listeners))
+        //Userid_pubkey_mapping := make(map[string]*btcec.PrivateKey)
+>>>>>>> Stashed changes
 
 	// We wait until the user provides a password over RPC. In case lnd is
 	// started with the --noseedbackup flag, we use the default password
@@ -607,12 +617,30 @@ func Main(lisCfg ListenerCfg) error {
 	// Initialize the ChainedAcceptor.
 	chainedAcceptor := chanacceptor.NewChainedAcceptor()
         //vyomesh code modified added server file userid and pubkeu value pair and passed to serverinstance 
+<<<<<<< Updated upstream
         Userid_pubkey_mapping[UserId] = idPrivKey
+=======
+        //Userid_pubkey_mapping[UserId] = idPrivKey
+        //vyomesh on 1st loop iteration made brontide listeners
+      /*    if i==0 {
+   	        
+		for i, listenAddr := range cfg.Listeners {
+		
+		listeners[i], err = brontide.NewListener(
+			idPrivKey, listenAddr.String(),
+		)
+		if err != nil {
+			return  err
+		}
+		}
+          }
+       */
+>>>>>>> Stashed changes
 	// Set up the core server which will listen for incoming peer
 	// connections.
 	server, err := newServer(
-		listeners,cfg.Listeners, ChanDB, towerClientDB, activeChainControl,
-		idPrivKey, walletInitParams.ChansToRestore, chainedAcceptor,UserId,Userid_pubkey_mapping,
+		cfg.Listeners, ChanDB, towerClientDB, activeChainControl,
+		idPrivKey, walletInitParams.ChansToRestore, chainedAcceptor,UserId,
 	)
 	if err != nil {
 		err := fmt.Errorf("Unable to create server: %v", err)
