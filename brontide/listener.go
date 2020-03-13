@@ -32,10 +32,7 @@ var _ net.Listener = (*Listener)(nil)
 
 // NewListener returns a new net.Listener which enforces the Brontide scheme
 // during both initial connection establishment and data transfer.
-<<<<<<< Updated upstream
-func NewListener(localStatic *btcec.PrivateKey,l *net.TCPListener ,Userid_pubkey_mapping map[string]string ,UserId string) (*Listener, error) {
-	
-=======
+
 func NewListener(localStatic *btcec.PrivateKey,listenAddr string) (*Listener, error) {
 	
         addr, err := net.ResolveTCPAddr("tcp", listenAddr)
@@ -48,7 +45,6 @@ func NewListener(localStatic *btcec.PrivateKey,listenAddr string) (*Listener, er
 		return nil, err
 	}
 
->>>>>>> Stashed changes
 	brontideListener := &Listener{
 		localStatic:   localStatic,
 		tcp:           l,
@@ -110,13 +106,10 @@ func (l *Listener) doHandshake(conn net.Conn) {
 	}
 
 	remoteAddr := conn.RemoteAddr().String()
-<<<<<<< Updated upstream
 
-	brontideConn := &Conn{
-=======
   	
         brontideConn := &Conn{
->>>>>>> Stashed changes
+
 		conn:  conn,
 		noise: NewBrontideMachine(false, l.localStatic, nil),
 	}

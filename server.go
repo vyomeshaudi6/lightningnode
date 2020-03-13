@@ -300,11 +300,9 @@ func parseAddr(address string) (net.Addr, error) {
 
 // noiseDial is a factory function which creates a connmgr compliant dialing
 // function by returning a closure which includes the server's identity key.
-<<<<<<< Updated upstream
-func noiseDial(idPriv *btcec.PrivateKey) func(net.Addr) (net.Conn, error) {
-=======
+
 func noiseDial(idPriv *btcec.PrivateKey ) func(net.Addr) (net.Conn, error) {
->>>>>>> Stashed changes
+
 	return func(a net.Addr) (net.Conn, error) {
 		lnAddr := a.(*lnwire.NetAddress)
 		return brontide.Dial(idPriv, lnAddr, cfg.net.Dial)
@@ -313,19 +311,7 @@ func noiseDial(idPriv *btcec.PrivateKey ) func(net.Addr) (net.Conn, error) {
 
 // newServer creates a new instance of the server which is to listen using the
 // passed listener address.
-<<<<<<< Updated upstream
-func newServer(tcplisteners []*net.TCPListener,listenAddrs []net.Addr, chanDB *channeldb.DB,
-	towerClientDB *wtdb.ClientDB, cc *chainControl,
-	privKey *btcec.PrivateKey,
-	chansToRestore walletunlocker.ChannelsToRecover,
-	chanPredicate chanacceptor.ChannelAcceptor, UserId string ,Userid_pubkey_mapping map[string]string) (*server, error) {
 
-	var err error
-        listeners := make([]net.Listener, len(tcplisteners))
-	for i, tcplistenAddr := range tcplisteners {
-		listeners[i], err = brontide.NewListener(
-			privKey, tcplistenAddr,Userid_pubkey_mapping,UserId,
-=======
 func newServer(listenAddrs []net.Addr, chanDB *channeldb.DB,
 	towerClientDB *wtdb.ClientDB, cc *chainControl,
 	privKey *btcec.PrivateKey,
@@ -341,18 +327,15 @@ func newServer(listenAddrs []net.Addr, chanDB *channeldb.DB,
 		// since we are resolving a local address.
 		listeners[0], err = brontide.NewListener(
 			privKey, listenAddr.String(),
->>>>>>> Stashed changes
+
 		)
 		if err != nil {
 			continue
 		}
-<<<<<<< Updated upstream
-	}
-                        
-=======
+
                 break
 	}           
->>>>>>> Stashed changes
+
 	globalFeatures := lnwire.NewRawFeatureVector()
 
 	// Only if we're not being forced to use the legacy onion format, will

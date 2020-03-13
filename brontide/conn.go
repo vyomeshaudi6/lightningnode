@@ -34,26 +34,22 @@ var _ net.Conn = (*Conn)(nil)
 // a non-nil error is returned.
 func Dial(localPriv *btcec.PrivateKey, netAddr *lnwire.NetAddress,
 	dialer func(string, string) (net.Conn, error)) (*Conn, error) {
-<<<<<<< Updated upstream
+
 	//ipAddr := netAddr.Address.String()
-=======
+
 	ipAddr := netAddr.Address.String()
->>>>>>> Stashed changes
+
 	var conn net.Conn
 	var err error
 	conn, err = dialer("tcp", ipAddr)
 	if err != nil {
 		return nil, err
 	}
-<<<<<<< Updated upstream
-
-=======
-   
-    
+ 
         if err != nil {
 		return nil, err
 	}
->>>>>>> Stashed changes
+
 	b := &Conn{
 		conn:  conn,
 		noise: NewBrontideMachine(true, localPriv, netAddr.IdentityKey),

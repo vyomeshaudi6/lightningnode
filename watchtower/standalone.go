@@ -69,20 +69,12 @@ func New(cfg *Config) (*Standalone, error) {
 	// addresses. Client should be able to connect to any of open ports to
 	// communicate with this Standalone instance.
          
-<<<<<<< Updated upstream
-        //making empty PeerListner just to avoid atchtower peeer actions // later when optimising code need to be modified    
-        var PeerListner *net.TCPListener
-=======
-      
->>>>>>> Stashed changes
- 	listeners := make([]net.Listener, 0, len(cfg.ListenAddrs))
+
+    	listeners := make([]net.Listener, 0, len(cfg.ListenAddrs))
 	for _, listenAddr := range cfg.ListenAddrs {
 		listener, err := brontide.NewListener(
-<<<<<<< Updated upstream
-			cfg.NodePrivKey, PeerListner, // here peerlistner is empty 
-=======
 			cfg.NodePrivKey, listenAddr.String(),
->>>>>>> Stashed changes
+
 		)
 		if err != nil {
 			return nil, err
