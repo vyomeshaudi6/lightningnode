@@ -1,0 +1,23 @@
+2020-03-16 17:38:26.067 [ERR] LTND: sql connection error: sqlite3: unable to open database file [14]
+2020-03-16 17:38:26.068 [INF] LTND: Shutdown complete2020-03-16 17:40:53.088 [ERR] LTND: sql connection error: sqlite3: unable to open database file [14]
+2020-03-16 17:43:30.130 [ERR] LTND: sql connection error: sqlite3: unable to open database file [14]
+2020-03-16 17:47:12.361 [INF] LTND: Version: 0.8.0-beta commit=, build=production, logging=default
+2020-03-16 17:47:12.361 [INF] LTND: Active chain: Bitcoin (network=simnet)
+2020-03-16 17:47:12.369 [INF] RPCS: password RPC server listening on 127.0.0.1:10001
+2020-03-16 17:47:12.369 [INF] RPCS: password gRPC proxy started at 127.0.0.1:10007
+2020-03-16 17:47:12.369 [INF] LTND: Waiting for wallet encryption password. Use `lncli create` to create a wallet, `lncli unlock` to unlock an existing wallet, or `lncli changepassword` to change the password of an existing wallet and unlock it.
+2020-03-16 17:47:24.077 [INF] LTND: Received interrupt
+2020-03-16 17:47:24.078 [INF] LTND: Shutting down...
+2020-03-16 17:47:24.078 [INF] LTND: Gracefully shutting down.
+2020-03-16 17:47:24.078 [ERR] LTND: Unable to set up wallet password listeners: shutting down
+2020-03-16 17:47:24.078 [INF] LTND: Shutdown complete
+2020-03-16 17:59:01.863 [INF] LTND: Version: 0.8.0-beta commit=, build=production, logging=default
+2020-03-16 17:59:01.864 [INF] LTND: Active chain: Bitcoin (network=simnet)
+2020-03-16 17:59:01.877 [INF] RPCS: password RPC server listening on 127.0.0.1:10001
+2020-03-16 17:59:01.878 [INF] RPCS: password gRPC proxy started at 127.0.0.1:10007
+2020-03-16 17:59:01.878 [INF] LTND: Waiting for wallet encryption password. Use `lncli create` to create a wallet, `lncli unlock` to unlock an existing wallet, or `lncli changepassword` to change the password of an existing wallet and unlock it.
+2020-03-16 17:59:24.284 [INF] LTND: Received interrupt
+2020-03-16 17:59:24.284 [INF] LTND: Shutting down...
+2020-03-16 17:59:24.284 [INF] LTND: Gracefully shutting down.
+2020-03-16 17:59:24.285 [ERR] LTND: Unable to set up wallet password listeners: shutting down
+2020-03-16 17:59:24.286 [INF] LTND: Shutdown complete
