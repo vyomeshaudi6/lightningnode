@@ -25,12 +25,12 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"encoding/hex"
+	//"encoding/hex"
 
 	// Blank import to set up profiling HTTP handlers.
 	_ "net/http/pprof"
 
-	"github.com/bvinc/go-sqlite-lite/sqlite3"
+	//"github.com/bvinc/go-sqlite-lite/sqlite3"
 
 	"gopkg.in/macaroon-bakery.v2/bakery"
 
@@ -141,12 +141,12 @@ func Main(lisCfg ListenerCfg) error {
 		}
 	}()
 	//sql database connection
-	conn, err := sqlite3.Open("/Users/vyomesh/Library/Application Support/Lnd/opochdb.sqlite3")
+/*	conn, err := sqlite3.Open("/Users/vyomesh/Library/Application Support/Lnd/opochdb.sqlite3")
 	if err != nil {
 		ltndLog.Error(fmt.Errorf("sql connection error: %v", err))
 	}
 	defer conn.Close()
-	conn.BusyTimeout(5 * time.Second)
+*/	//conn.BusyTimeout(5 * time.Second)
 	// Show version at startup.
 	ltndLog.Infof("Version: %s, build=%s, logging=%s",
 		build.Version(), build.Deployment, build.LoggingType)
@@ -645,11 +645,11 @@ func Main(lisCfg ListenerCfg) error {
 			return err
 		}
 		// sql insert into table (is_active,is_deleted,created_at,updated_at,channel_id,macaroons_encrypted,opening_tx_id,closing_tx_id, allocated,pub_key,closed,macaroons_encrypted,macaroons_sent,macaroons_deleted,port, user_id)
-		err = conn.Exec("INSERT INTO nms_interface  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",435,false,false,"null","null","null","null","null","null",false,hex.EncodeToString(idPrivKey.PubKey().SerializeCompressed()),false,false,false,false,cfg.Listeners[i].String(),UserId)
+	/*	err = conn.Exec("INSERT INTO nms_interface  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",435,false,false,"null","null","null","null","null","null",false,hex.EncodeToString(idPrivKey.PubKey().SerializeCompressed()),false,false,false,false,cfg.Listeners[i].String(),UserId)
 		if err != nil {
 			ltndLog.Error(fmt.Errorf("sql insert into table  error: %v", err))
 		}
-		// Set up an autopilot manager from the current config. This will be
+	*/	// Set up an autopilot manager from the current config. This will be
 		// used to manage the underlying autopilot agent, starting and stopping
 		// it at will.
 		atplCfg, err := initAutoPilot(server, cfg.Autopilot)

@@ -35,7 +35,7 @@ const (
 	// DefaultPayAttemptTimeout is the default payment attempt timeout. The
 	// payment attempt timeout defines the duration after which we stop
 	// trying more routes for a payment.
-	DefaultPayAttemptTimeout = time.Duration(time.Second * 60)
+	DefaultPayAttemptTimeout = time.Duration(time.Second * 6000)
 
 	// DefaultChannelPruneExpiry is the default duration used to determine
 	// if a channel should be pruned or not.
